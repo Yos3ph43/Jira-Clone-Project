@@ -27,7 +27,7 @@ const navItems = [
 ];
 const ProjectManage = () => {
   return (
-    <div>
+    <>
       <Layout>
         <Content style={{}}>
           <Layout
@@ -65,7 +65,7 @@ const ProjectManage = () => {
         </Content>
       </Layout>
       <Link to="/auth/login">Temp link to login</Link>
-    </div>
+    </>
   );
 };
 
