@@ -1,7 +1,6 @@
 import requestor from "app/api";
 import { apiPath } from "app/apiPath";
 import actions from "./type";
-import actionsLogin from "features/Login/redux/type";
 
 export const fetchAllProject = async (next) => {
   try {
@@ -24,7 +23,6 @@ export const updateUserProfileAction = (data) => async (next) => {
   } catch (error) {
     console.log(error);
     if (error.response) alert(error.response.data.message);
-
     throw error;
   }
 };
