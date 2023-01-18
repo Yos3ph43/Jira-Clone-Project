@@ -13,7 +13,6 @@ const UserProfile = () => {
     await dispatch(updateUserProfileAction(values));
     await dispatch(loginAction(values));
     alert("Succesfully Updated");
-    console.log(values);
   };
   const formItemLayout = {
     labelCol: {
