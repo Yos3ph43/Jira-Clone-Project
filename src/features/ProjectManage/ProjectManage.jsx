@@ -11,23 +11,23 @@ import {
 const navItems = [
   {
     key: "1",
-    icon: <DatabaseFilled />,
+    icon: <DatabaseFilled className="pl-7" />,
     label: <Link to="/list">Project List</Link>,
   },
   {
     key: "2",
-    icon: <FileAddFilled />,
+    icon: <FileAddFilled className="pl-7" />,
     label: <Link to="/create">Create Project</Link>,
   },
   {
     key: "3",
-    icon: <SettingFilled />,
+    icon: <SettingFilled className="pl-7" />,
     label: <Link to="/user">User Profile</Link>,
   },
 ];
 const ProjectManage = () => {
   return (
-    <>
+    <div>
       <Layout>
         <Content style={{}}>
           <Layout
@@ -36,10 +36,11 @@ const ProjectManage = () => {
             }}
           >
             <Sider
+              className="min-h-screen"
               style={{
                 background: "#fff",
               }}
-              width={200}
+              width={250}
             >
               <Menu
                 mode="inline"
@@ -51,6 +52,7 @@ const ProjectManage = () => {
                   padding: "24px 0",
                 }}
                 items={navItems}
+                className=""
               />
             </Sider>
             <Content
@@ -65,7 +67,7 @@ const ProjectManage = () => {
         </Content>
       </Layout>
       <Link to="/auth/login">Temp link to login</Link>
-    </>
+    </div>
   );
 };
 
