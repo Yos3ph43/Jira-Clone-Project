@@ -1,9 +1,17 @@
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { Button, Form, Input, Space, Table } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchAllProject } from "../redux/action";
 
 const ProjectList = () => {
+  const project = useSelector((state) => state.project.allProject);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllProject(""));
+  }, []);
+  console.log(project);
   const columns = [
     {
       title: "User ID",
