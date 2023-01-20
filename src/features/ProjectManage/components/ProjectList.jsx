@@ -1,6 +1,24 @@
-import { DeleteFilled, EditFilled } from "@ant-design/icons";
-import { Button, Form, Input, Space, Table } from "antd";
-import React, { useEffect } from "react";
+import {
+  AntDesignOutlined,
+  DeleteFilled,
+  EditFilled,
+  PlusCircleOutlined,
+  SearchOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
+import {
+  Avatar,
+  Button,
+  Collapse,
+  Form,
+  Input,
+  Popover,
+  Space,
+  Table,
+  Tooltip,
+} from "antd";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchAllProject } from "../redux/action";
@@ -9,40 +27,45 @@ const ProjectList = () => {
   const project = useSelector((state) => state.project.allProject);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchAllProject(""));
+    dispatch(fetchAllProject());
   }, []);
   console.log(project);
+  //popover
+  const [open, setOpen] = useState(false);
+  const hide = () => {
+    setOpen(false);
+  };
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+  //end popover
   const columns = [
     {
-      title: "User ID",
-      dataIndex: "taiKhoan",
-      key: "taiKhoan",
+      title: "Project ID",
+      dataIndex: "projectId",
+      key: "projectId",
     },
     {
-      title: "Password",
-      dataIndex: "matKhau",
-      key: "matKhau",
+      title: "Project Name",
+      dataIndex: "projectName",
+      key: "projectName",
     },
     {
-      title: "User Name",
-      dataIndex: "hoTen",
-      key: "hoTen",
+      title: "Creator",
+      dataIndex: "creator",
+      key: "creator",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
     },
     {
-      title: "Phone number",
-      key: "soDT",
-      dataIndex: "soDT",
+      title: "Members",
+      key: "members",
+      dataIndex: "members",
     },
-    {
-      title: "User Type",
-      key: "maLoaiNguoiDung",
-      dataIndex: "maLoaiNguoiDung",
-    },
+
     {
       title: "Action",
       key: "action",
@@ -50,70 +73,100 @@ const ProjectList = () => {
     },
   ];
   //table body
-  // const data = profile?.map((item) => {
-  //   return {
-  //     key: item?.taiKhoan,
-  //     taiKhoan: <p>{item.taiKhoan}</p>,
-  //     matKhau: <p>{item.matKhau}</p>,
-  //     hoTen: <p>{item.hoTen}</p>,
-  //     email: <p>{item.email}</p>,
-  //     soDT: <p>{item.soDT}</p>,
-  //     maLoaiNguoiDung: <p>{item.maLoaiNguoiDung}</p>,
-  //     action: (
-  //       <div key={item.taiKhoan}>
-  //         <Space size="middle">
-  //           <Link to={`/admin/userEdit/${item.taiKhoan}`}>
-  //             <Button className="bg-sky-800 text-white border-white hover:border-sky-600 hover:text-sky-600 hover:bg-neutral-800">
-  //               <EditFilled />
-  //             </Button>
-  //           </Link>
+  const data = project?.map((item) => {
+    return {
+      key: item.id,
+      projectId: <p>{item.id}</p>,
+      projectName: (
+        <div>
+          <Link>{item.projectName}</Link>
+        </div>
+      ),
+      creator: <p>{item.creator.name}</p>,
+      category: <p>{item.categoryName}</p>,
+      members: (
+        <>
+          <Avatar.Group>
+            <Popover
+              title="List of members"
+              placement="bottom"
+              key={item.id}
+              content={
+                <>
+                  <Table></Table>
+                </>
+              }
+              trigger="click"
+              open={open}
+              onOpenChange={() => {
+                handleOpenChange();
+              }}
+            >
+              {item.members?.map((member) => {
+                console.log(member);
+                return (
+                  <Avatar
+                    src={member.avatar}
+                    key={member.userId}
+                    style={{
+                      backgroundColor: "red",
+                    }}
+                  ></Avatar>
+                );
+              })}
+            </Popover>
+          </Avatar.Group>
 
-  //           <Button className="bg-red-800 text-white border-white hover:border-red-600 hover:text-red-600 hover:bg-neutral-800">
-  //             <DeleteFilled onClick={() => {}} />
-  //           </Button>
-  //         </Space>
-  //       </div>
-  //     ),
-  //   };
-  // });
+          <Avatar>
+            <Popover
+              placement="bottom"
+              key={item.id}
+              content={
+                <>
+                  <Space>
+                    <Input
+                    // onChange={}
+                    />
 
+                    <Button danger onClick={hide}>
+                      Cancel
+                    </Button>
+                    <Button type="primary">Add</Button>
+                  </Space>
+                </>
+              }
+              trigger="click"
+              open={open}
+              onOpenChange={() => {
+                handleOpenChange();
+              }}
+            >
+              <PlusCircleOutlined />
+            </Popover>
+          </Avatar>
+        </>
+      ),
+      action: (
+        <div key={item.id}>
+          <Space size="middle">
+            <Link to={`/detail/${item.id}`}>
+              <Button className="bg-sky-800 text-white border-white hover:border-sky-600 hover:text-sky-600 hover:bg-neutral-800">
+                <EditFilled />
+              </Button>
+            </Link>
+
+            <Button className="bg-red-800 text-white border-white hover:border-red-600 hover:text-red-600 hover:bg-neutral-800">
+              <DeleteFilled onClick={() => {}} />
+            </Button>
+          </Space>
+        </div>
+      ),
+    };
+  });
   //main render
   return (
     <div>
-      <div className="my-5">
-        {/* user search  */}
-        <div>
-          <Form
-            name="basic"
-            wrapperCol={{ span: 6 }}
-            initialValues={{ remember: true }}
-            // onFinish={}
-            autoComplete="off"
-          >
-            <Form.Item
-              name="tuKhoa"
-              rules={[{ required: true, message: "Please input user name!" }]}
-            >
-              <Input />
-            </Form.Item>
-            {/* hidden  */}
-            <Form.Item name="MaNhom" initialValue="GP00" hidden>
-              <Input disabled />
-            </Form.Item>
-            <Form.Item>
-              <Space>
-                <Button type="primary" htmlType="submit">
-                  Search
-                </Button>
-                <Button type="primary" danger onClick={() => {}}>
-                  Cancel
-                </Button>
-              </Space>
-            </Form.Item>
-          </Form>
-        </div>
-      </div>
-      {/* <Table columns={columns} dataSource={data} /> */}
+      <Table columns={columns} dataSource={data} />
     </div>
   );
 };

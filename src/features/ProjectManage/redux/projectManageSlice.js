@@ -2,7 +2,7 @@ import produce from "immer";
 import actions from "./type";
 
 const initialState = {
-  allProject: [],
+  allProject: null,
 };
 
 const reducer = (state = initialState, { type, payload }) =>
