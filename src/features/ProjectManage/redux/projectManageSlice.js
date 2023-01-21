@@ -3,6 +3,7 @@ import actions from "./type";
 
 const initialState = {
   allProject: null,
+  projectDetail: null,
 };
 
 const reducer = (state = initialState, { type, payload }) =>
@@ -10,6 +11,9 @@ const reducer = (state = initialState, { type, payload }) =>
     switch (type) {
       case actions.SET_ALL_PROJECT:
         draft.allProject = payload;
+        break;
+      case actions.SET_PROJECT_DETAIL:
+        draft.projectDetail = payload;
         break;
 
       default:
