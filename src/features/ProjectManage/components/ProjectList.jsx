@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchAllProject, fetchProjectDetail } from "../redux/action";
 import TextArea from "antd/es/input/TextArea";
+import ReactQuill from "react-quill";
 
 const ProjectList = () => {
   const project = useSelector((state) => state.project.allProject);
@@ -221,16 +222,36 @@ const ProjectList = () => {
             maxWidth: 600,
             padding: "1rem 1rem 0 1rem",
           }}
+          fields={[
+            {
+              name: ["id"],
+              value: projectDetail?.id,
+            },
+
+            {
+              name: ["projectName"],
+              value: projectDetail?.projectName,
+            },
+
+            {
+              name: ["description"],
+              value: projectDetail?.description,
+            },
+            {
+              name: ["projectCategory"],
+              value: projectDetail?.projectCategory.name,
+            },
+          ]}
         >
           <Form.Item
-            initialValue={projectDetail?.id}
+            // initialValue={projectDetail?.id}
             name="id"
             label="Project ID"
           >
             <Input disabled />
           </Form.Item>
           <Form.Item
-            initialValue={projectDetail?.projectName}
+            // initialValue={projectDetail?.projectName}
             name="projectName"
             // rules={[
             //   {
@@ -242,13 +263,14 @@ const ProjectList = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            initialValue={projectDetail?.description}
+            // initialValue={projectDetail?.description}
             label="Description"
+            name="description"
           >
-            <TextArea rows={6} />
+            <ReactQuill />
           </Form.Item>
           <Form.Item
-            initialValue={projectDetail?.projectCategory.name}
+            // initialValue={projectDetail?.projectCategory.name}
             label="Project Category"
             name="projectCategory"
             rules={[
