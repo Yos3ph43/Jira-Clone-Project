@@ -5,4 +5,5 @@ export const apiPath = {
   UPDATE_USER: "/api/Users/editUser",
   PROJECT_DETAIL: "/api/Project/getProjectDetail",
   UPDATE_PROJECT: "/api/Project/updateProject",
+  DELETE_PROJECT: "/api/Project/deleteProject",
 };

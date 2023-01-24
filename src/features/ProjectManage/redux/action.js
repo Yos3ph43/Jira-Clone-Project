@@ -8,7 +8,6 @@ export const fetchAllProject = () => async (next) => {
       method: "GET",
       url: apiPath.ALL_PROJECT,
     });
-    console.log(res);
     next({ type: actions.SET_ALL_PROJECT, payload: res.data.content });
   } catch (error) {
     console.log(error);
@@ -43,16 +42,28 @@ export const fetchProjectDetail = (id) => async (next) => {
     console.log(error);
   }
 };
-export const updateProjectDetail = async (projectId, data) => {
+
+export const updateProjectDetail = (projectId, data) => async () => {
   try {
-    const res = await requestor({
+    await requestor({
       method: "PUT",
       url: apiPath.UPDATE_PROJECT,
       data,
       params: { projectId },
     });
-    console.log(res);
   } catch (error) {
     console.log(error);
+  }
+};
+export const deleteProject = (projectId) => async () => {
+  try {
+    const res = await requestor({
+      method: "DELETE",
+      url: apiPath.DELETE_PROJECT,
+      params: { projectId },
+    });
+    console.log(res);
+  } catch (error) {
+    throw alert(error.response.data.content);
   }
 };

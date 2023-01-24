@@ -23,21 +23,26 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchAllProject, fetchProjectDetail } from "../redux/action";
+import {
+  deleteProject,
+  fetchAllProject,
+  fetchProjectDetail,
+  updateProjectDetail,
+} from "../redux/action";
 import TextArea from "antd/es/input/TextArea";
 import ReactQuill from "react-quill";
+import { isVisible } from "@testing-library/user-event/dist/utils";
 
 const ProjectList = () => {
   const project = useSelector((state) => state.project.allProject);
+  const user = useSelector((state) => state.user.profile);
   const projectDetail = useSelector((state) => state.project.projectDetail);
   const dispatch = useDispatch();
   // const [selectedItem, setSelectedItem] = useState("");
-  // console.log(selectedItem);
+  const [current, setCurrent] = useState(0);
   useEffect(() => {
     dispatch(fetchAllProject());
-  }, []);
-  console.log(project);
-  console.log(projectDetail);
+  }, [current]);
   //popover
   const [open, setOpen] = useState(false);
   const hide = () => {
@@ -46,24 +51,13 @@ const ProjectList = () => {
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
-  //end popover
+
   //modal
   const [openModal, setOpenModal] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
   const showModal = () => {
     setOpenModal(true);
   };
-  const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      // setOpenModal(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setOpenModal(false);
-  };
+
   const columns = [
     {
       title: "Project ID",
@@ -177,15 +171,22 @@ const ProjectList = () => {
               onClick={() => {
                 showModal();
                 dispatch(fetchProjectDetail(item.id));
-                // setSelectedItem(item);
               }}
               className="bg-sky-800 text-white border-white hover:border-sky-600 hover:text-sky-600 hover:bg-neutral-800"
             >
               <EditFilled />
             </Button>
 
-            <Button className="bg-red-800 text-white border-white hover:border-red-600 hover:text-red-600 hover:bg-neutral-800">
-              <DeleteFilled onClick={() => {}} />
+            <Button
+              className="bg-red-800 text-white border-white hover:border-red-600 hover:text-red-600 hover:bg-neutral-800"
+              onClick={() => {
+                if (window.confirm("Xác nhận xóa?")) {
+                  dispatch(deleteProject(item.id));
+                  dispatch(fetchAllProject());
+                }
+              }}
+            >
+              <DeleteFilled />
             </Button>
           </Space>
         </div>
@@ -197,16 +198,35 @@ const ProjectList = () => {
     <div>
       <Table columns={columns} dataSource={data} />
       <Modal
+        width="40rem"
         title="Project Edit"
         open={openModal}
-        // onOk={handleOk}
-
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
+        onCancel={() => {
+          setOpenModal(false);
+        }}
+        footer={[
+          <Button
+            key="cancel"
+            onClick={() => {
+              setOpenModal(false);
+            }}
+          >
+            Cancel
+          </Button>,
+        ]}
       >
         <Form
           onFinish={(value) => {
-            console.log(value);
+            if (user.id === projectDetail.creator.id) {
+              return (
+                dispatch(updateProjectDetail(value.id, value)),
+                dispatch(fetchAllProject()),
+                setCurrent(current + 1),
+                alert("Cập nhật project thành công"),
+                setOpenModal(false)
+              );
+            }
+            alert("Chỉ người tạo project mới có thể thay đổi");
           }}
           initialValues={{
             remember: true,
@@ -238,41 +258,45 @@ const ProjectList = () => {
               value: projectDetail?.description,
             },
             {
-              name: ["projectCategory"],
-              value: projectDetail?.projectCategory.name,
+              name: ["categoryId"],
+              value: projectDetail?.projectCategory.id,
+            },
+            {
+              name: ["creator"],
+              value: projectDetail?.creator.id,
             },
           ]}
         >
           <Form.Item
-            // initialValue={projectDetail?.id}
+            initialValue={projectDetail?.id}
             name="id"
             label="Project ID"
           >
             <Input disabled />
           </Form.Item>
           <Form.Item
-            // initialValue={projectDetail?.projectName}
             name="projectName"
-            // rules={[
-            //   {
-            //     required: true,
-            //   },
-            // ]}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
             label="Project Name"
           >
             <Input />
           </Form.Item>
           <Form.Item
-            // initialValue={projectDetail?.description}
+            initialValue={projectDetail?.description}
             label="Description"
             name="description"
           >
             <ReactQuill />
           </Form.Item>
+
           <Form.Item
-            // initialValue={projectDetail?.projectCategory.name}
+            initialValue={projectDetail?.projectCategory.id}
             label="Project Category"
-            name="projectCategory"
+            name="categoryId"
             rules={[
               {
                 required: true,
@@ -281,33 +305,38 @@ const ProjectList = () => {
           >
             <Select
               direction="bottom"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
               style={{
                 width: 240,
               }}
               options={[
                 {
-                  value: "Dự án phần mềm",
+                  value: "2",
                   label: "Software",
                   name: "Dự án phần mềm",
                 },
                 {
-                  value: "Dự án web",
+                  value: "1",
                   label: "Web Application",
                   name: "Dự án web",
                 },
                 {
-                  value: "Dự án di động",
+                  value: "3",
                   label: "Mobile Application",
                   name: "Dự án di động",
                 },
               ]}
             />
           </Form.Item>
+          {/* hidden  */}
+          <Form.Item
+            hidden
+            initialValue={projectDetail?.creator.id}
+            name="creator"
+            label="creator"
+          >
+            <Input disabled value={projectDetail?.creator.id} />
+          </Form.Item>
+          {/* hidden  */}
           <Form.Item
             wrapperCol={{
               offset: 20,
