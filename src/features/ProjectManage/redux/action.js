@@ -62,6 +62,7 @@ export const deleteProject = (projectId) => async () => {
       url: apiPath.DELETE_PROJECT,
       params: { projectId },
     });
+    alert("Xóa project thành công");
     console.log(res);
   } catch (error) {
     throw alert(error.response.data.content);
