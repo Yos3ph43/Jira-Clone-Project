@@ -132,6 +132,7 @@ export const assignUserAction = (data) => async () => {
       data,
     });
     console.log(res);
+    alert("Added the user to the project");
   } catch (error) {
     console.log(error);
     if (error.response) alert(error.response.data.content);
