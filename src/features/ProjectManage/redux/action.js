@@ -1,3 +1,4 @@
+import { RedditSquareFilled } from "@ant-design/icons";
 import requestor from "app/api";
 import { apiPath } from "app/apiPath";
 import actions from "./type";
@@ -106,5 +107,34 @@ export const fetchTaskDetail = (taskId) => async (next) => {
     next({ type: actions.SET_TASK_DETAIL, payload: res.data.content });
   } catch (error) {
     console.log(error);
+  }
+};
+//search user api
+export const fetchSearchUser = (keyword) => async (next) => {
+  try {
+    const res = await requestor({
+      method: "GET",
+      url: apiPath.SEARCH_USER,
+      params: { keyword },
+    });
+    next({ type: actions.SET_SEARCH_USER, payload: res.data.content });
+    console.log(res.data.content);
+  } catch (error) {
+    console.log(error);
+  }
+};
+//assign user api
+export const assignUserAction = (data) => async () => {
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.ASSIGN_USER,
+      data,
+    });
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+    if (error.response) alert(error.response.data.content);
+    throw error;
   }
 };

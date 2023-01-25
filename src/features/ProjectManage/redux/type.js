@@ -3,6 +3,7 @@ const actions = {
   SET_ALL_PROJECT: `${sliceName}/SET_ALL_PROJECT`,
   SET_PROJECT_DETAIL: `${sliceName}/SET_PROJECT_DETAIL`,
   SET_TASK_DETAIL: `${sliceName}/SET_TASK_DETAIL`,
+  SET_SEARCH_USER: `${sliceName}/SET_SEARCH_USER`,
 };
 
 export default actions;

@@ -4,6 +4,7 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons";
 import {
+  AutoComplete,
   Avatar,
   Button,
   Form,
@@ -18,9 +19,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+  assignUserAction,
   deleteProject,
   fetchAllProject,
   fetchProjectDetail,
+  fetchSearchUser,
   updateProjectDetail,
 } from "../redux/action";
 import ReactQuill from "react-quill";
@@ -28,13 +31,17 @@ import ReactQuill from "react-quill";
 const ProjectList = () => {
   const project = useSelector((state) => state.project.allProject);
   const user = useSelector((state) => state.user.profile);
+  const searchUser = useSelector((state) => state.project.searchUser);
   const projectDetail = useSelector((state) => state.project.projectDetail);
   const dispatch = useDispatch();
+
   // const [selectedItem, setSelectedItem] = useState("");
   const [current, setCurrent] = useState(0);
   useEffect(() => {
     dispatch(fetchAllProject());
   }, [current]);
+  //search user value
+  const [value, setValue] = useState("");
   //popover
   const [open, setOpen] = useState(false);
   const hide = () => {
@@ -134,14 +141,43 @@ const ProjectList = () => {
               content={
                 <>
                   <Space>
-                    <Input
+                    {/* <Input
                     // onChange={}
+                    /> */}
+                    <AutoComplete
+                      className="w-56"
+                      onSearch={(value) => {
+                        console.log(value);
+                        dispatch(fetchSearchUser(value));
+                      }}
+                      options={
+                        searchUser &&
+                        searchUser.map((user) => ({
+                          label: `${user.name} (ID: ${user.userId})`,
+                          value: `${user.userId}`,
+                        }))
+                      }
+                      value={value}
+                      onSelect={(value, option) => {
+                        setValue(option.label);
+
+                        dispatch(
+                          assignUserAction({
+                            projectId: item.id,
+                            userId: option.value,
+                          })
+                        );
+                        dispatch(fetchAllProject());
+                      }}
+                      onChange={(txt) => {
+                        setValue(txt);
+                      }}
                     />
 
                     <Button danger onClick={hide}>
                       Cancel
                     </Button>
-                    <Button type="primary">Add</Button>
+                    {/* <Button type="primary">Add</Button> */}
                   </Space>
                 </>
               }
