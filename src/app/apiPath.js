@@ -6,4 +6,7 @@ export const apiPath = {
   PROJECT_DETAIL: "/api/Project/getProjectDetail",
   UPDATE_PROJECT: "/api/Project/updateProject",
   DELETE_PROJECT: "/api/Project/deleteProject",
+  CREATE_PROJECT: "/api/Project/createProjectAuthorize",
+  CREATE_TASK: "/api/Project/createTask",
+  TASK_DETAIL: "/api/Project/getTaskDetail",
 };

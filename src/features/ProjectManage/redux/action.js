@@ -68,3 +68,43 @@ export const deleteProject = (projectId) => async () => {
     throw alert(error.response.data.content);
   }
 };
+export const createProject = (data) => async () => {
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.CREATE_PROJECT,
+      data,
+    });
+    alert("Thêm project thành công");
+    console.log(res);
+  } catch (error) {
+    throw alert(error.response.data.content);
+  }
+};
+export const createTask = (data) => async () => {
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.CREATE_TASK,
+      data,
+    });
+    alert("Thêm task thành công");
+    console.log(res);
+  } catch (error) {
+    throw alert(error.response.data.content);
+  }
+};
+
+export const fetchTaskDetail = (taskId) => async (next) => {
+  try {
+    const res = await requestor({
+      method: "GET",
+      url: apiPath.TASK_DETAIL,
+      params: { taskId },
+    });
+    console.log(res);
+    next({ type: actions.SET_TASK_DETAIL, payload: res.data.content });
+  } catch (error) {
+    console.log(error);
+  }
+};

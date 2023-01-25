@@ -1,16 +1,11 @@
 import {
-  AntDesignOutlined,
   DeleteFilled,
   EditFilled,
   PlusCircleOutlined,
-  SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import Highlighter from "react-highlight-words";
 import {
   Avatar,
   Button,
-  Collapse,
   Form,
   Input,
   Modal,
@@ -18,9 +13,8 @@ import {
   Select,
   Space,
   Table,
-  Tooltip,
 } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -29,9 +23,7 @@ import {
   fetchProjectDetail,
   updateProjectDetail,
 } from "../redux/action";
-import TextArea from "antd/es/input/TextArea";
 import ReactQuill from "react-quill";
-import { isVisible } from "@testing-library/user-event/dist/utils";
 
 const ProjectList = () => {
   const project = useSelector((state) => state.project.allProject);

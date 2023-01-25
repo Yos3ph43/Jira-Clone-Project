@@ -1,7 +1,174 @@
-import React from "react";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Input,
+  Modal,
+  Popover,
+  Row,
+  Space,
+  Table,
+} from "antd";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { fetchProjectDetail } from "../redux/action";
+import TaskDetail from "./TaskDetail";
 
 const ProjectDetail = () => {
-  return <div>ProjectDetail</div>;
+  //popover
+  const [open, setOpen] = useState(false);
+  const hide = () => {
+    setOpen(false);
+  };
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+  //modal
+  const [openModal, setOpenModal] = useState(false);
+  const showModal = () => {
+    setOpenModal(true);
+  };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchProjectDetail(params.id));
+  }, []);
+  const projectDetail = useSelector((state) => state.project.projectDetail);
+  const params = useParams();
+  console.log(projectDetail);
+  console.log(params);
+  return (
+    <div>
+      <div>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/">Home</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to="/list">Project List</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>Project Detail</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+      {/* Title  */}
+      <>
+        <h1 className="text-center text-indigo-700 text-3xl font-semibold">
+          <span className="text-black text-xl font-extrabold">Project:</span>{" "}
+          {projectDetail?.projectName}
+        </h1>
+      </>
+      {/* Avatar getUser về map */}
+      <div>
+        <Avatar.Group>
+          <Popover
+            title="List of members"
+            placement="bottom"
+            // key={item.id}
+            content={
+              <>
+                <Table></Table>
+              </>
+            }
+            trigger="click"
+            open={open}
+            onOpenChange={() => {
+              handleOpenChange();
+            }}
+          >
+            {/* {item.members?.map((member) => {
+            return (
+              <Avatar
+                src={member.avatar}
+                key={member.userId}
+                style={{
+                  backgroundColor: "red",
+                }}
+              ></Avatar>
+            );
+          })} */}
+          </Popover>
+        </Avatar.Group>
+
+        <Avatar>
+          <Popover
+            placement="bottom"
+            // key={item.id}
+            content={
+              <>
+                <Space>
+                  <Input
+                  // onChange={}
+                  />
+
+                  <Button danger onClick={hide}>
+                    Cancel
+                  </Button>
+                  <Button type="primary">Add</Button>
+                </Space>
+              </>
+            }
+            trigger="click"
+            open={open}
+            onOpenChange={() => {
+              handleOpenChange();
+            }}
+          >
+            <PlusCircleOutlined />
+          </Popover>
+        </Avatar>
+      </div>
+      {/* Card  */}
+      <div className="site-card-wrapper">
+        <Row gutter={16}>
+          <Col className="rounded-b-2xl" span={6}>
+            <Card
+              bodyStyle={{
+                backgroundColor: "#f2f5f7",
+                borderRadius: "0",
+              }}
+              className="bg-indigo-300 text-center "
+              title="Card title"
+              bordered={true}
+            >
+              <Card
+                className="bg-white"
+                style={{ width: 335, cursor: "pointer" }}
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
+                <p>ABC</p>
+              </Card>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+      <Modal
+        width="40rem"
+        title="Project Edit"
+        open={openModal}
+        onCancel={() => {
+          setOpenModal(false);
+        }}
+        footer={[
+          <Button
+            onClick={() => {
+              setOpenModal(false);
+            }}
+            key="cancel"
+          >
+            Cancel
+          </Button>,
+        ]}
+      >
+        <TaskDetail />
+      </Modal>
+    </div>
+  );
 };
 
 export default ProjectDetail;

@@ -4,6 +4,7 @@ import actions from "./type";
 const initialState = {
   allProject: null,
   projectDetail: null,
+  taskDetail: null,
 };
 
 const reducer = (state = initialState, { type, payload }) =>
@@ -14,6 +15,9 @@ const reducer = (state = initialState, { type, payload }) =>
         break;
       case actions.SET_PROJECT_DETAIL:
         draft.projectDetail = payload;
+        break;
+      case actions.SET_TASK_DETAIL:
+        draft.taskDetail = payload;
         break;
 
       default:
