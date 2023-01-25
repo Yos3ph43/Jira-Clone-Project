@@ -27,6 +27,7 @@ import {
   updateProjectDetail,
 } from "../redux/action";
 import ReactQuill from "react-quill";
+import ProjectListMembers from "./ProjectListMembers";
 
 const ProjectList = () => {
   const project = useSelector((state) => state.project.allProject);
@@ -108,10 +109,14 @@ const ProjectList = () => {
             <Popover
               title="List of members"
               placement="bottom"
+              className="hover:cursor-pointer"
               key={item.id}
               content={
                 <>
-                  <Table></Table>
+                  <ProjectListMembers
+                    members={item.members}
+                    projectId={item.id}
+                  />
                 </>
               }
               trigger="click"
@@ -168,13 +173,21 @@ const ProjectList = () => {
                           })
                         );
                         dispatch(fetchAllProject());
+                        hide();
+                        setValue("");
                       }}
                       onChange={(txt) => {
                         setValue(txt);
                       }}
                     />
 
-                    <Button danger onClick={hide}>
+                    <Button
+                      danger
+                      onClick={() => {
+                        hide();
+                        setValue("");
+                      }}
+                    >
                       Cancel
                     </Button>
                     {/* <Button type="primary">Add</Button> */}

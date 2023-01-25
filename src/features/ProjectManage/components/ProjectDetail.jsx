@@ -22,6 +22,7 @@ import {
   fetchProjectDetail,
   fetchSearchUser,
 } from "../redux/action";
+import ProjectListMembers from "./ProjectListMembers";
 import TaskDetail from "./TaskDetail";
 
 const ProjectDetail = () => {
@@ -79,7 +80,10 @@ const ProjectDetail = () => {
             // key={item.id}
             content={
               <>
-                <Table></Table>
+                <ProjectListMembers
+                  members={projectDetail?.members}
+                  projectId={params.id}
+                />
               </>
             }
             trigger="click"
@@ -133,13 +137,21 @@ const ProjectDetail = () => {
                         })
                       );
                       dispatch(fetchProjectDetail(params.id));
+                      hide();
+                      setValue("");
                     }}
                     onChange={(txt) => {
                       setValue(txt);
                     }}
                   />
 
-                  <Button danger onClick={hide}>
+                  <Button
+                    danger
+                    onClick={() => {
+                      hide();
+                      setValue("");
+                    }}
+                  >
                     Cancel
                   </Button>
                 </Space>

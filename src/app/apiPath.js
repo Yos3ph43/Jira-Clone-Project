@@ -11,4 +11,5 @@ export const apiPath = {
   TASK_DETAIL: "/api/Project/getTaskDetail",
   SEARCH_USER: "/api/Users/getUser",
   ASSIGN_USER: "/api/Project/assignUserProject",
+  REMOVE_USER_FROM_PROJECT: "/api/Project/removeUserFromProject",
 };

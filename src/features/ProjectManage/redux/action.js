@@ -139,3 +139,20 @@ export const assignUserAction = (data) => async () => {
     throw error;
   }
 };
+//remove user from project
+export const removeUserProject = (data) => async () => {
+  if (!window.confirm("Remove this user?")) return;
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.REMOVE_USER_FROM_PROJECT,
+      data,
+    });
+    console.log(res);
+    alert("User removed");
+  } catch (error) {
+    console.log(error);
+    if (error.response) alert(error.response.data.content);
+    throw error;
+  }
+};
