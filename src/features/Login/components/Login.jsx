@@ -11,7 +11,7 @@ const Login = () => {
   const onFinish = async (values) => {
     console.log("Success:", values);
     await dispatch(loginAction(values));
-    navigate("/");
+    navigate("/list");
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
