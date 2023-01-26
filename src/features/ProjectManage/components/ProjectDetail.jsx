@@ -1,5 +1,6 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import {
+  AutoComplete,
   Avatar,
   Breadcrumb,
   Button,
@@ -16,10 +17,19 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { fetchProjectDetail } from "../redux/action";
+import {
+  assignUserAction,
+  fetchProjectDetail,
+  fetchSearchUser,
+} from "../redux/action";
+import ProjectListMembers from "./ProjectListMembers";
 import TaskDetail from "./TaskDetail";
 
 const ProjectDetail = () => {
+  //search user value
+  const [value, setValue] = useState("");
+  const searchUser = useSelector((state) => state.project.searchUser);
+
   //popover
   const [open, setOpen] = useState(false);
   const hide = () => {
@@ -70,7 +80,10 @@ const ProjectDetail = () => {
             // key={item.id}
             content={
               <>
-                <Table></Table>
+                <ProjectListMembers
+                  members={projectDetail?.members}
+                  projectId={params.id}
+                />
               </>
             }
             trigger="click"
@@ -100,14 +113,47 @@ const ProjectDetail = () => {
             content={
               <>
                 <Space>
-                  <Input
-                  // onChange={}
+                  <AutoComplete
+                    className="w-56"
+                    onSearch={(value) => {
+                      console.log(value);
+                      dispatch(fetchSearchUser(value));
+                    }}
+                    options={
+                      searchUser &&
+                      searchUser.map((user) => ({
+                        label: `${user.name} (ID: ${user.userId})`,
+                        value: `${user.userId}`,
+                      }))
+                    }
+                    value={value}
+                    onSelect={(value, option) => {
+                      setValue(option.label);
+
+                      dispatch(
+                        assignUserAction({
+                          projectId: params.id,
+                          userId: option.value,
+                        })
+                      );
+                      dispatch(fetchProjectDetail(params.id));
+                      hide();
+                      setValue("");
+                    }}
+                    onChange={(txt) => {
+                      setValue(txt);
+                    }}
                   />
 
-                  <Button danger onClick={hide}>
+                  <Button
+                    danger
+                    onClick={() => {
+                      hide();
+                      setValue("");
+                    }}
+                  >
                     Cancel
                   </Button>
-                  <Button type="primary">Add</Button>
                 </Space>
               </>
             }
