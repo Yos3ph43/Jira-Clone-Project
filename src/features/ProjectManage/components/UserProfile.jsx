@@ -4,8 +4,10 @@ import { Button, Form, Input, InputNumber } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfileAction } from "../redux/action";
 import { loginAction } from "features/Login/redux/action";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
+  const navigate = useNavigate();
   let userProfile = useSelector((state) => state.user.profile);
   const dispatch = useDispatch();
   const onFinish = async (values) => {
@@ -18,6 +20,12 @@ const UserProfile = () => {
     labelCol: {
       span: 6,
     },
+  };
+  const handleLogout = () => {
+    if (!window.confirm("Logout out?")) return;
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/auth/login");
   };
   const [form] = Form.useForm();
   return (
@@ -94,7 +102,9 @@ const UserProfile = () => {
               <Button type="primary" htmlType="submit">
                 Update
               </Button>
-              <Button className="ml-3">Logout</Button>
+              <Button className="ml-3" onClick={handleLogout}>
+                Logout
+              </Button>
             </div>
           </Form>
         </div>

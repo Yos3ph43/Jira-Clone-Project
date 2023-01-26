@@ -1,6 +1,6 @@
 import React from "react";
 
-const TaskDetail = () => {
+const TaskDetail = (props) => {
   return <div>TaskDetail</div>;
 };
 
