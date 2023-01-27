@@ -267,7 +267,7 @@ const ProjectList = () => {
                 setOpenModal(false)
               );
             }
-            alert("Chỉ người tạo project mới có thể thay đổi");
+            alert("Chỉ chủ project mới có thể thay đổi");
           }}
           initialValues={{
             remember: true,
@@ -351,17 +351,17 @@ const ProjectList = () => {
               }}
               options={[
                 {
-                  value: "2",
+                  value: "Dự án phần mềm",
                   label: "Software",
                   name: "Dự án phần mềm",
                 },
                 {
-                  value: "1",
+                  value: "Dự án web",
                   label: "Web Application",
                   name: "Dự án web",
                 },
                 {
-                  value: "3",
+                  value: "Dự án di động",
                   label: "Mobile Application",
                   name: "Dự án di động",
                 },

@@ -1,4 +1,4 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { CheckSquareOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import {
   AutoComplete,
   Avatar,
@@ -12,12 +12,14 @@ import {
   Modal,
   Popover,
   Row,
+  Select,
   Slider,
   Space,
   Table,
 } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import ReactQuill from "react-quill";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -27,8 +29,26 @@ import {
 } from "../redux/action";
 import ProjectListMembers from "./ProjectListMembers";
 import TaskDetail from "./TaskDetail";
-
+const mockVal = (str, repeat = 1) => ({
+  value: str.repeat(repeat),
+});
 const ProjectDetail = () => {
+  // AutoComplete
+  const [valueAC, setValueAC] = useState("");
+  const [options, setOptions] = useState([]);
+  const onSearch = (searchText) => {
+    setOptions(
+      !searchText
+        ? []
+        : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
+    );
+  };
+  const onSelect = (data) => {
+    console.log("onSelect", data);
+  };
+  const onChangeAC = (data) => {
+    setValueAC(data);
+  };
   // slider
   const [inputValue, setInputValue] = useState(0);
   const onChange = (newValue) => {
@@ -239,7 +259,7 @@ const ProjectDetail = () => {
       </Modal>
       {/* modal create task  */}
       <Modal
-        width="40%"
+        width="30%"
         title="Create Task"
         open={openTask}
         onCancel={() => {
@@ -260,11 +280,14 @@ const ProjectDetail = () => {
           initialValues={{
             remember: true,
           }}
-          labelCol={{
-            span: 10,
+          onFinish={(value) => {
+            console.log(value);
           }}
+          // labelCol={{
+          //   span: 10,
+          // }}
           wrapperCol={{
-            span: 10,
+            span: 100,
           }}
           layout="horizontal"
           style={{
@@ -273,56 +296,133 @@ const ProjectDetail = () => {
           }}
           fields={[
             {
-              name: ["id"],
+              name: ["listUserAsign"],
+              value: [],
+            },
+            {
+              name: ["taskName"],
               value: projectDetail?.id,
             },
 
             {
-              name: ["projectName"],
+              name: ["description"],
               value: projectDetail?.projectName,
             },
 
             {
-              name: ["description"],
+              name: ["statusId"],
               value: projectDetail?.description,
             },
             {
-              name: ["categoryId"],
+              name: ["originalEstimate"],
               value: projectDetail?.projectCategory.id,
             },
             {
-              name: ["creator"],
+              name: ["timeTrackingSpent"],
+              value: projectDetail?.creator.id,
+            },
+            {
+              name: ["timeTrackingRemaining"],
+              value: projectDetail?.creator.id,
+            },
+            {
+              name: ["projectId"],
+              value: projectDetail?.creator.id,
+            },
+            {
+              name: ["typeId"],
+              value: projectDetail?.creator.id,
+            },
+            {
+              name: ["priorityId"],
               value: projectDetail?.creator.id,
             },
           ]}
         >
-          <Form.Item label="Task Name" name="">
+          <Form.Item name="taskName">
+            <h4>Task Name</h4>
             <Input />
           </Form.Item>
-          <Form.Item label="Task Type" name="">
-            <Input />
+          <Form.Item name="typeId">
+            <h4>Task Type</h4>
+            <Select
+              defaultValue="Bug"
+              options={[
+                {
+                  value: "1",
+                  label: "Bug",
+                },
+                {
+                  value: "2",
+                  label: "New Task",
+                },
+              ]}
+            />
           </Form.Item>
           <Row>
             <Col span={12}>
-              <Form.Item label="Status">
-                <Input></Input>
+              <Form.Item name="statusId">
+                <h4>Status</h4>
+                <Select
+                  defaultValue="Backlog"
+                  style={{
+                    width: "95%",
+                  }}
+                  options={[
+                    {
+                      value: "1",
+                      label: "Backlog",
+                    },
+                    {
+                      value: "2",
+                      label: "Selected for Development",
+                    },
+                    {
+                      value: "3",
+                      label: "In Progress",
+                    },
+                    {
+                      value: "4",
+                      label: "Done",
+                    },
+                  ]}
+                />{" "}
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Priority">
-                <Input></Input>
+              <Form.Item name="priorityId">
+                <h4>Priority</h4>
+                <Select
+                  defaultValue="HIGH"
+                  // style={{
+                  //   width: "100%",
+                  // }}
+                  options={[
+                    {
+                      value: "1",
+                      label: "HIGH",
+                    },
+                    {
+                      value: "2",
+                      label: "MEDIUM",
+                    },
+                    {
+                      value: "3",
+                      label: "LOW",
+                    },
+                    {
+                      value: "4",
+                      label: "LOWEST",
+                    },
+                  ]}
+                />{" "}
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={12}>
-              <Form.Item
-                wrapperCol={{
-                  offset: 6,
-                  // span: 20,
-                }}
-                label="Original Estimate"
-              >
+              <Form.Item name="originalEstimate">
+                <h4>Original Estimate</h4>
                 <InputNumber
                   value={inputValue}
                   onChange={onChange}
@@ -330,11 +430,57 @@ const ProjectDetail = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Time Tracking (hours)">
+              <Form.Item>
+                <h4>Time Tracking (hours)</h4>
                 <Slider max={inputValue} value={inputValue} />{" "}
               </Form.Item>
             </Col>
           </Row>
+          <Row>
+            <Col span={12}>
+              <Form.Item name="listUserAsign">
+                <h4>Assignees</h4>
+                <AutoComplete
+                  value={valueAC}
+                  options={options}
+                  style={{
+                    width: "95%",
+                  }}
+                  onSelect={onSelect}
+                  onSearch={onSearch}
+                  onChange={onChangeAC}
+                  placeholder="input here"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item className="pr-1" name="timeTrackingSpent">
+                <h4 className="font-normal">Time spent</h4>
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item className="pl-1" name="timeTrackingRemaining">
+                <h4 className="font-normal">Time remaining</h4>
+                <Input disabled />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item name="description">
+            <h4>Description</h4>
+            <ReactQuill
+              theme="snow"
+              style={{
+                height: "5rem",
+                marginBottom: "2rem",
+              }}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Create
+            </Button>
+          </Form.Item>
         </Form>
       </Modal>
     </div>
