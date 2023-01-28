@@ -26,6 +26,7 @@ import {
   assignUserAction,
   fetchProjectDetail,
   fetchSearchUser,
+  fetchUserByProject,
 } from "../redux/action";
 import ProjectListMembers from "./ProjectListMembers";
 import TaskDetail from "./TaskDetail";
@@ -74,11 +75,13 @@ const ProjectDetail = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchProjectDetail(params.id));
+    dispatch(fetchUserByProject(params.id));
   }, []);
   const projectDetail = useSelector((state) => state.project.projectDetail);
+  const userDetail = useSelector((state) => state.project.userByProject);
   const params = useParams();
   console.log(projectDetail);
-  console.log(params);
+  console.log(userDetail);
   return (
     <div>
       <div className="pt-7 pl-7">
@@ -277,9 +280,9 @@ const ProjectDetail = () => {
         ]}
       >
         <Form
-          initialValues={{
-            remember: true,
-          }}
+          // initialValues={{
+          //   remember: true,
+          // }}
           onFinish={(value) => {
             console.log(value);
           }}
@@ -294,50 +297,7 @@ const ProjectDetail = () => {
             maxWidth: 600,
             padding: "1rem 1rem 0 1rem",
           }}
-          fields={[
-            {
-              name: ["listUserAsign"],
-              value: [],
-            },
-            {
-              name: ["taskName"],
-              value: projectDetail?.id,
-            },
-
-            {
-              name: ["description"],
-              value: projectDetail?.projectName,
-            },
-
-            {
-              name: ["statusId"],
-              value: projectDetail?.description,
-            },
-            {
-              name: ["originalEstimate"],
-              value: projectDetail?.projectCategory.id,
-            },
-            {
-              name: ["timeTrackingSpent"],
-              value: projectDetail?.creator.id,
-            },
-            {
-              name: ["timeTrackingRemaining"],
-              value: projectDetail?.creator.id,
-            },
-            {
-              name: ["projectId"],
-              value: projectDetail?.creator.id,
-            },
-            {
-              name: ["typeId"],
-              value: projectDetail?.creator.id,
-            },
-            {
-              name: ["priorityId"],
-              value: projectDetail?.creator.id,
-            },
-          ]}
+          autoComplete="off"
         >
           <Form.Item name="taskName">
             <h4>Task Name</h4>
@@ -351,10 +311,12 @@ const ProjectDetail = () => {
                 {
                   value: "1",
                   label: "Bug",
+                  name: "1",
                 },
                 {
                   value: "2",
                   label: "New Task",
+                  name: "2",
                 },
               ]}
             />
@@ -372,18 +334,22 @@ const ProjectDetail = () => {
                     {
                       value: "1",
                       label: "Backlog",
+                      // name: "1",
                     },
                     {
                       value: "2",
                       label: "Selected for Development",
+                      // name: "2",
                     },
                     {
                       value: "3",
                       label: "In Progress",
+                      // name: "3",
                     },
                     {
                       value: "4",
                       label: "Done",
+                      // name: "4",
                     },
                   ]}
                 />{" "}
@@ -394,9 +360,6 @@ const ProjectDetail = () => {
                 <h4>Priority</h4>
                 <Select
                   defaultValue="HIGH"
-                  // style={{
-                  //   width: "100%",
-                  // }}
                   options={[
                     {
                       value: "1",

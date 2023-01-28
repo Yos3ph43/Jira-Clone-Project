@@ -6,6 +6,7 @@ const initialState = {
   projectDetail: null,
   taskDetail: null,
   searchUser: [],
+  userByProject: null,
 };
 
 const reducer = (state = initialState, { type, payload }) =>
@@ -22,6 +23,9 @@ const reducer = (state = initialState, { type, payload }) =>
         break;
       case actions.SET_SEARCH_USER:
         draft.searchUser = payload;
+        break;
+      case actions.SET_USER_BY_PROJECT:
+        draft.userByProject = payload;
         break;
 
       default:
