@@ -34,22 +34,6 @@ const mockVal = (str, repeat = 1) => ({
   value: str.repeat(repeat),
 });
 const ProjectDetail = () => {
-  // AutoComplete
-  const [valueAC, setValueAC] = useState("");
-  const [options, setOptions] = useState([]);
-  const onSearch = (searchText) => {
-    setOptions(
-      !searchText
-        ? []
-        : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
-    );
-  };
-  const onSelect = (data) => {
-    console.log("onSelect", data);
-  };
-  const onChangeAC = (data) => {
-    setValueAC(data);
-  };
   // slider
   const [inputValue, setInputValue] = useState(0);
   const onChange = (newValue) => {
@@ -280,9 +264,20 @@ const ProjectDetail = () => {
         ]}
       >
         <Form
-          // initialValues={{
-          //   remember: true,
-          // }}
+          fields={[
+            {
+              name: "typeId",
+              value: "1",
+            },
+            {
+              name: "statusId",
+              value: "1",
+            },
+            {
+              name: "priorityId",
+              value: "1",
+            },
+          ]}
           onFinish={(value) => {
             console.log(value);
           }}
@@ -299,14 +294,13 @@ const ProjectDetail = () => {
           }}
           autoComplete="off"
         >
+          <h4>Task Name</h4>
           <Form.Item name="taskName">
-            <h4>Task Name</h4>
             <Input />
           </Form.Item>
+          <h4>Task Type</h4>
           <Form.Item name="typeId">
-            <h4>Task Type</h4>
             <Select
-              defaultValue="Bug"
               options={[
                 {
                   value: "1",
@@ -323,10 +317,9 @@ const ProjectDetail = () => {
           </Form.Item>
           <Row>
             <Col span={12}>
+              <h4>Status</h4>
               <Form.Item name="statusId">
-                <h4>Status</h4>
                 <Select
-                  defaultValue="Backlog"
                   style={{
                     width: "95%",
                   }}
@@ -352,14 +345,13 @@ const ProjectDetail = () => {
                       // name: "4",
                     },
                   ]}
-                />{" "}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
+              <h4>Priority</h4>
               <Form.Item name="priorityId">
-                <h4>Priority</h4>
                 <Select
-                  defaultValue="HIGH"
                   options={[
                     {
                       value: "1",
@@ -378,14 +370,14 @@ const ProjectDetail = () => {
                       label: "LOWEST",
                     },
                   ]}
-                />{" "}
+                />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={12}>
+              <h4>Original Estimate</h4>
               <Form.Item name="originalEstimate">
-                <h4>Original Estimate</h4>
                 <InputNumber
                   value={inputValue}
                   onChange={onChange}
@@ -393,44 +385,43 @@ const ProjectDetail = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
+              <h4>Time Tracking (hours)</h4>
               <Form.Item>
-                <h4>Time Tracking (hours)</h4>
-                <Slider max={inputValue} value={inputValue} />{" "}
+                <Slider max={inputValue} value={inputValue} />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={12}>
+              <h4>Assignees</h4>
               <Form.Item name="listUserAsign">
-                <h4>Assignees</h4>
-                <AutoComplete
-                  value={valueAC}
-                  options={options}
-                  style={{
-                    width: "95%",
-                  }}
-                  onSelect={onSelect}
-                  onSearch={onSearch}
-                  onChange={onChangeAC}
-                  placeholder="input here"
+                <Select
+                  mode="multiple"
+                  options={
+                    projectDetail &&
+                    projectDetail.members.map((member) => ({
+                      value: member.userId,
+                      label: `${member.name} - ${member.userId}`,
+                    }))
+                  }
                 />
               </Form.Item>
             </Col>
             <Col span={6}>
+              <h4 className="font-normal">Time spent</h4>
               <Form.Item className="pr-1" name="timeTrackingSpent">
-                <h4 className="font-normal">Time spent</h4>
                 <Input />
               </Form.Item>
             </Col>
             <Col span={6}>
+              <h4 className="font-normal">Time remaining</h4>
               <Form.Item className="pl-1" name="timeTrackingRemaining">
-                <h4 className="font-normal">Time remaining</h4>
                 <Input disabled />
               </Form.Item>
             </Col>
           </Row>
+          <h4>Description</h4>
           <Form.Item name="description">
-            <h4>Description</h4>
             <ReactQuill
               theme="snow"
               style={{
@@ -445,6 +436,7 @@ const ProjectDetail = () => {
             </Button>
           </Form.Item>
         </Form>
+        {/* <TaskCreate /> */}
       </Modal>
     </div>
   );

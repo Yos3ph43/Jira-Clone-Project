@@ -269,9 +269,9 @@ const ProjectList = () => {
             }
             alert("Chỉ chủ project mới có thể thay đổi");
           }}
-          initialValues={{
-            remember: true,
-          }}
+          // initialValues={{
+          //   remember: true,
+          // }}
           labelCol={{
             span: 8,
           }}
@@ -285,25 +285,25 @@ const ProjectList = () => {
           }}
           fields={[
             {
-              name: ["id"],
+              name: "id",
               value: projectDetail?.id,
             },
 
             {
-              name: ["projectName"],
+              name: "projectName",
               value: projectDetail?.projectName,
             },
 
             {
-              name: ["description"],
+              name: "description",
               value: projectDetail?.description,
             },
             {
-              name: ["categoryId"],
-              value: projectDetail?.projectCategory.id,
+              name: "categoryId",
+              value: `${projectDetail?.projectCategory.id}`,
             },
             {
-              name: ["creator"],
+              name: "creator",
               value: projectDetail?.creator.id,
             },
           ]}
@@ -335,7 +335,6 @@ const ProjectList = () => {
           </Form.Item>
 
           <Form.Item
-            initialValue={projectDetail?.projectCategory.id}
             label="Project Category"
             name="categoryId"
             rules={[
@@ -345,25 +344,23 @@ const ProjectList = () => {
             ]}
           >
             <Select
+              defaultValue={projectDetail?.projectCategory.id}
               direction="bottom"
               style={{
                 width: 240,
               }}
               options={[
                 {
-                  value: "Dự án phần mềm",
                   label: "Software",
-                  name: "Dự án phần mềm",
+                  value: "2",
                 },
                 {
-                  value: "Dự án web",
                   label: "Web Application",
-                  name: "Dự án web",
+                  value: "1",
                 },
                 {
-                  value: "Dự án di động",
                   label: "Mobile Application",
-                  name: "Dự án di động",
+                  value: "3",
                 },
               ]}
             />
