@@ -30,15 +30,19 @@ import {
 } from "../redux/action";
 import ProjectListMembers from "./ProjectListMembers";
 import TaskDetail from "./TaskDetail";
-const mockVal = (str, repeat = 1) => ({
-  value: str.repeat(repeat),
-});
+// const mockVal = (str, repeat = 1) => ({
+//   value: str.repeat(repeat),
+// });
 const ProjectDetail = () => {
   // slider
-  const [inputValue, setInputValue] = useState(0);
-  const onChange = (newValue) => {
-    setInputValue(newValue);
-  };
+  const [inputValue, setInputValue] = useState({
+    originalEstimate: 0,
+    timeTrackingSpent: 0,
+    timeTrackingRemaining: 0,
+  });
+
+  // const [inputTime, setTimeValue] = useState(inputValue);
+
   //search user value
   const [value, setValue] = useState("");
   const searchUser = useSelector((state) => state.project.searchUser);
@@ -377,17 +381,31 @@ const ProjectDetail = () => {
           <Row>
             <Col span={12}>
               <h4>Original Estimate</h4>
-              <Form.Item name="originalEstimate">
+              <Form.Item initialValue={inputValue} name="originalEstimate">
                 <InputNumber
+                  max={inputValue}
+                  style={{ width: "95%" }}
                   value={inputValue}
-                  onChange={onChange}
-                ></InputNumber>
+                  onChange={(e) => {
+                    setInputValue({
+                      ...inputValue,
+                      originalEstimate: e,
+                    });
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <h4>Time Tracking (hours)</h4>
               <Form.Item>
-                <Slider max={inputValue} value={inputValue} />
+                <Slider
+                  min={0}
+                  max={inputValue.originalEstimate}
+                  value={
+                    Number(inputValue.originalEstimate) -
+                    Number(inputValue.timeTrackingSpent)
+                  }
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -396,6 +414,7 @@ const ProjectDetail = () => {
               <h4>Assignees</h4>
               <Form.Item name="listUserAsign">
                 <Select
+                  style={{ width: "95%" }}
                   mode="multiple"
                   options={
                     projectDetail &&
@@ -409,14 +428,37 @@ const ProjectDetail = () => {
             </Col>
             <Col span={6}>
               <h4 className="font-normal">Time spent</h4>
-              <Form.Item className="pr-1" name="timeTrackingSpent">
-                <Input />
+              <Form.Item name="timeTrackingSpent">
+                <InputNumber
+                  min={0}
+                  style={{ width: "95%" }}
+                  onChange={(e) => {
+                    setInputValue({
+                      ...inputValue,
+                      timeTrackingSpent: e,
+                      timeTrackingRemaining: inputValue.originalEstimate - e,
+                    });
+                  }}
+                />
               </Form.Item>
             </Col>
             <Col span={6}>
               <h4 className="font-normal">Time remaining</h4>
-              <Form.Item className="pl-1" name="timeTrackingRemaining">
-                <Input disabled />
+              <Form.Item
+                initialValue={Number(inputValue.timeTrackingRemaining)}
+                name="timeTrackingRemaining"
+              >
+                <InputNumber
+                  min={0}
+                  style={{ width: "95%" }}
+                  max={
+                    inputValue.originalEstimate - inputValue.timeTrackingSpent
+                  }
+                  value={
+                    Number(inputValue.originalEstimate) -
+                    Number(inputValue.timeTrackingSpent)
+                  }
+                />
               </Form.Item>
             </Col>
           </Row>
