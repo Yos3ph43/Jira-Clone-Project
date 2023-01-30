@@ -37,9 +37,9 @@ const ProjectDetail = () => {
   // slider
   const [inputValue, setInputValue] = useState({
     originalEstimate: 0,
-    timeTrackingSpent: 0,
-    timeTrackingRemaining: 0,
   });
+  const [vlSlider, setVlSlider] = useState(0);
+  const [timeRemain, setTimeRemain] = useState(0);
 
   // const [inputTime, setTimeValue] = useState(inputValue);
 
@@ -281,13 +281,12 @@ const ProjectDetail = () => {
               name: "priorityId",
               value: "1",
             },
+            { name: "timeTrackingSpent", value: vlSlider },
+            { name: "timeTrackingRemaining", value: timeRemain },
           ]}
           onFinish={(value) => {
             console.log(value);
           }}
-          // labelCol={{
-          //   span: 10,
-          // }}
           wrapperCol={{
             span: 100,
           }}
@@ -391,6 +390,7 @@ const ProjectDetail = () => {
                       ...inputValue,
                       originalEstimate: e,
                     });
+                    setVlSlider(e);
                   }}
                 />
               </Form.Item>
@@ -401,10 +401,11 @@ const ProjectDetail = () => {
                 <Slider
                   min={0}
                   max={inputValue.originalEstimate}
-                  value={
-                    Number(inputValue.originalEstimate) -
-                    Number(inputValue.timeTrackingSpent)
-                  }
+                  onChange={(vlSlider) => {
+                    setVlSlider(vlSlider);
+                    setTimeRemain(inputValue.originalEstimate - vlSlider);
+                  }}
+                  value={vlSlider}
                 />
               </Form.Item>
             </Col>
@@ -431,33 +432,23 @@ const ProjectDetail = () => {
               <Form.Item name="timeTrackingSpent">
                 <InputNumber
                   min={0}
+                  max={inputValue.originalEstimate}
                   style={{ width: "95%" }}
-                  onChange={(e) => {
-                    setInputValue({
-                      ...inputValue,
-                      timeTrackingSpent: e,
-                      timeTrackingRemaining: inputValue.originalEstimate - e,
-                    });
+                  onChange={(input) => {
+                    setVlSlider(input);
+                    setTimeRemain(inputValue.originalEstimate - input);
                   }}
                 />
               </Form.Item>
             </Col>
             <Col span={6}>
               <h4 className="font-normal">Time remaining</h4>
-              <Form.Item
-                initialValue={Number(inputValue.timeTrackingRemaining)}
-                name="timeTrackingRemaining"
-              >
+              <Form.Item name="timeTrackingRemaining">
                 <InputNumber
                   min={0}
                   style={{ width: "95%" }}
-                  max={
-                    inputValue.originalEstimate - inputValue.timeTrackingSpent
-                  }
-                  value={
-                    Number(inputValue.originalEstimate) -
-                    Number(inputValue.timeTrackingSpent)
-                  }
+                  max={inputValue.originalEstimate - vlSlider}
+                  disabled
                 />
               </Form.Item>
             </Col>
