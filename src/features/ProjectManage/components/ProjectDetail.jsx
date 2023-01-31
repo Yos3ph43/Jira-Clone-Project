@@ -271,7 +271,7 @@ const ProjectDetail = () => {
         </div>
         {/* modal project edit  */}
         <Modal
-          width="40rem"
+          className="w-3/5"
           title="Project Edit"
           open={openModal}
           onCancel={() => {

@@ -214,3 +214,50 @@ export const assignUserTask = (data) => async () => {
     throw error;
   }
 };
+
+//add comment
+export const addCommentAction = (data) => async () => {
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.ADD_COMMENT,
+      data,
+    });
+    alert("Commented");
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+    if (error.response) alert(error.response.data.content);
+    throw error;
+  }
+};
+//Delete comment
+
+export const deleteCommentAction = (idComment) => async () => {
+  if (!window.confirm("Delete this comment?")) return;
+  try {
+    const res = await requestor({
+      method: "DELETE",
+      url: apiPath.DELETE_COMMENT,
+      params: { idComment },
+    });
+    console.log(res);
+  } catch (error) {
+    throw alert(error.response.data.content);
+  }
+};
+
+export const editCommentAction =
+  ({ id, contentComment }) =>
+  async () => {
+    try {
+      const res = await requestor({
+        method: "PUT",
+        url: apiPath.EDIT_COMMENT,
+        params: { id, contentComment },
+      });
+      console.log(res);
+    } catch (error) {
+      throw alert(error.response.data.content);
+    }
+  };

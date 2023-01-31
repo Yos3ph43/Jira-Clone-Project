@@ -1,24 +1,12 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import {
-  AutoComplete,
-  Avatar,
-  Button,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Popover,
-  Row,
-  Select,
-  Slider,
-  Space,
-} from "antd";
+import { Avatar, InputNumber, Popover, Select, Slider, Form } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import ReactQuill from "react-quill";
 import { useDispatch, useSelector } from "react-redux";
 import { assignUserTask, fetchTaskDetail } from "../redux/action";
 import ProjectListMembers from "./ProjectListMembers";
+import TaskComments from "./TaskComments";
+import parse from "html-react-parser";
 
 const TaskDetail = (props) => {
   //popover
@@ -34,242 +22,124 @@ const TaskDetail = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchTaskDetail(taskId));
-    console.log();
   }, [taskId]);
   const task = useSelector((state) => state.project.taskDetail);
+  // priority
+  const priority = () => {
+    switch (task.priorityId) {
+      case 1:
+        return "HIGH";
+      case 2:
+        return "MEDIUM";
+      case 3:
+        return "LOW";
+      case 4:
+        return "LOWEST";
+
+      default:
+        break;
+    }
+  };
 
   console.log(props, task);
   return (
     task && (
-      <div>
-        <Form
-          fields={[
-            {
-              name: "projectId",
-              value: taskId,
-            },
-            {
-              name: "taskName",
-              value: task.taskName,
-            },
-            {
-              name: "typeId",
-              value: `${task.typeId}`,
-            },
-            {
-              name: "statusId",
-              value: `${task.statusId}`,
-            },
-            {
-              name: "priorityId",
-              value: `${task.priorityId}`,
-            },
-            {
-              name: "description",
-              value: task.description,
-            },
-            {
-              name: "originalEstimate",
-              value: task.originalEstimate,
-            },
-            {
-              name: "timeSlider",
-              value: task.timeTrackingSpent,
-            },
+      <div className="flex p-5">
+        {/* LEFTSIDE */}
+        <div className="w-3/5 mr-10">
+          {/* name */}
+          <h2>{task.taskName}</h2>
+          {/* description */}
+          <div className="descr">
+            <h3>Description</h3>
+            <p>{parse(task.description)}</p>
+            <p>
+              Before you start work on an issue, you can set a time or other
+              type of estimate to calculate how much work you believe it'll take
+              to resolve it. Once you've started to work on a specific issue,
+              log time to keep a record of it. Open the issue and select Time
+              tracking Fill in the Time Spent field Fill in the Time Remaining
+              field and click Save
+            </p>
+          </div>
+          {/* comments */}
+          <div className="comments">
+            <TaskComments taskId={taskId} comments={task.lstComment} />
+          </div>
+        </div>
 
-            { name: "timeTrackingSpent", value: task.timeTrackingSpent },
-            {
-              name: "timeTrackingRemaining",
-              value: task.timeTrackingRemaining,
-            },
-          ]}
-          onFinish={(value) => {
-            console.log(value);
-            // dispatch(createTask(value));
-            // dispatch(fetchProjectDetail(params.id));
-            // setOpenModal(false);
-          }}
-          wrapperCol={{
-            span: 100,
-          }}
-          layout="horizontal"
-          style={{
-            maxWidth: 600,
-            padding: "1rem 1rem 0 1rem",
-          }}
-          autoComplete="off"
-        >
-          {/* hidden  */}
-          <Form.Item hidden name="projectId" initialValue={"params.id"}>
-            <Input hidden disabled />
-          </Form.Item>
-          {/* hidden  */}
+        {/* RIGHTSIDE */}
+        <div className="w-2/5">
+          {/* Status */}
+          <div>
+            <h3>STATUS</h3>
 
-          <h4>Task Name</h4>
-          <Form.Item
-            name="taskName"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập tên Task",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <h4>Task Type</h4>
-          <Form.Item name="typeId">
-            <Select
-              options={[
-                {
-                  value: "1",
-                  label: "Bug",
-                  name: "1",
-                },
-                {
-                  value: "2",
-                  label: "New Task",
-                  name: "2",
-                },
-              ]}
-            />
-          </Form.Item>
-          <Row>
-            <Col span={12}>
-              <h4>Status</h4>
+            <Form fields={[{ name: "statusId", value: task.statusId }]}>
               <Form.Item name="statusId">
                 <Select
-                  style={{
-                    width: "95%",
+                  onSelect={(value) => {
+                    // dispatch update statusId action
                   }}
+                  className="w-32"
                   options={[
                     {
                       value: "1",
                       label: "Backlog",
-                      // name: "1",
                     },
                     {
                       value: "2",
                       label: "Selected for Development",
-                      // name: "2",
                     },
                     {
                       value: "3",
                       label: "In Progress",
-                      // name: "3",
                     },
                     {
                       value: "4",
                       label: "Done",
-                      // name: "4",
                     },
                   ]}
                 />
               </Form.Item>
-            </Col>
-            <Col span={12}>
-              <h4>Priority</h4>
-              <Form.Item name="priorityId">
-                <Select
-                  options={[
-                    {
-                      value: "1",
-                      label: "HIGH",
-                    },
-                    {
-                      value: "2",
-                      label: "MEDIUM",
-                    },
-                    {
-                      value: "3",
-                      label: "LOW",
-                    },
-                    {
-                      value: "4",
-                      label: "LOWEST",
-                    },
-                  ]}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <h4>Original Estimate</h4>
-              <Form.Item
-                name="originalEstimate"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập tổng thời gian dự kiến",
-                  },
-                ]}
-              >
-                <InputNumber
-                  max={"inputValue"}
-                  style={{ width: "95%" }}
-                  onChange={(e) => {
-                    // setInputValue({
-                    //   ...inputValue,
-                    //   originalEstimate: e,
-                    // });
-                    // setVlSlider(e);
+            </Form>
+          </div>
+          {/* ASSIGNEES / member */}
+          <div>
+            <h3>ASSIGNEES</h3>
+            <div>
+              <Avatar.Group>
+                <Popover
+                  title="List of members"
+                  placement="bottom"
+                  // key={item.id}
+                  content={
+                    <>
+                      <ProjectListMembers
+                        members={task.assigness}
+                        taskId={taskId}
+                      />
+                    </>
+                  }
+                  trigger="click"
+                  open={open}
+                  onOpenChange={() => {
+                    handleOpenChange();
                   }}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <h4>Time Tracking (hours)</h4>
-              <Form.Item name="timeSlider">
-                <Slider
-                  min={0}
-                  max={task.originalEstimate}
-                  onChange={(vlSlider) => {
-                    // setVlSlider(vlSlider);
-                    // setTimeRemain(inputValue.originalEstimate - vlSlider);
-                  }}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <h4>Assignees</h4>
-              <Form.Item name="listUserAsign">
-                <Avatar.Group>
-                  <Popover
-                    title="List of members"
-                    placement="bottom"
-                    // key={item.id}
-                    content={
-                      <>
-                        <ProjectListMembers
-                          members={task.assigness}
-                          taskId={taskId}
-                        />
-                      </>
-                    }
-                    trigger="click"
-                    open={open}
-                    onOpenChange={() => {
-                      handleOpenChange();
-                    }}
-                  >
-                    {task.assigness.map((member) => {
-                      return (
-                        <Avatar
-                          src={member.avatar}
-                          key={member.userId}
-                          style={{
-                            backgroundColor: "red",
-                            cursor: "pointer",
-                          }}
-                        ></Avatar>
-                      );
-                    })}
-                  </Popover>
-                </Avatar.Group>
-              </Form.Item>
+                >
+                  {task.assigness.map((member) => {
+                    return (
+                      <Avatar
+                        src={member.avatar}
+                        key={member.userId}
+                        style={{
+                          backgroundColor: "red",
+                          cursor: "pointer",
+                        }}
+                      ></Avatar>
+                    );
+                  })}
+                </Popover>
+              </Avatar.Group>
               <Avatar>
                 <Popover
                   placement="bottom"
@@ -302,49 +172,58 @@ const TaskDetail = (props) => {
                   <PlusCircleOutlined />
                 </Popover>
               </Avatar>
-            </Col>
-            <Col span={6}>
-              <h4 className="font-normal">Time spent</h4>
-              <Form.Item name="timeTrackingSpent">
+            </div>
+          </div>
+          {/* priority */}
+          <div>
+            <h3>PRIORITY</h3>
+            <p>{priority()}</p>
+          </div>
+          {/* ORIGINAL ESTIMATE */}
+          <div>
+            <h3>{`ORIGINAL ESTIMATE (HOURS)`}</h3>
+
+            <Form
+              fields={[
+                { name: "originalEstimate", value: task.originalEstimate },
+              ]}
+            >
+              <Form.Item name="originalEstimate">
                 <InputNumber
-                  min={0}
-                  max={"inputValue.originalEstimate"}
-                  style={{ width: "95%" }}
-                  onChange={(input) => {
-                    // setVlSlider(input);
-                    // setTimeRemain(inputValue.originalEstimate - input);
+                  onChange={(value) => {
+                    // dispatch update originalEstimate action
                   }}
                 />
               </Form.Item>
-            </Col>
-            <Col span={6}>
-              <h4 className="font-normal">Time remaining</h4>
-              <Form.Item name="timeTrackingRemaining">
-                <InputNumber
-                  min={0}
-                  style={{ width: "95%" }}
-                  max={"inputValue.originalEstimate - vlSlider"}
-                  disabled
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <h4>Description</h4>
-          <Form.Item name="description">
-            <ReactQuill
-              theme="snow"
-              style={{
-                height: "5rem",
-                marginBottom: "2rem",
-              }}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Create
-            </Button>
-          </Form.Item>
-        </Form>
+            </Form>
+          </div>
+          {/* TIME TRACKING*/}
+          <div>
+            <h3>TIME TRACKING</h3>
+            <div>
+              <Form
+                fields={[
+                  { name: "timeTrackingSpent", value: task.timeTrackingSpent },
+                ]}
+              >
+                <div className="flex justify-between">
+                  <span>0h</span>
+                  <span>{task.originalEstimate}h</span>
+                </div>
+                <Form.Item name="timeTrackingSpent">
+                  <Slider
+                    min={0}
+                    max={task.originalEstimate}
+                    onChange={(value) => {
+                      // dispatch update timeTrackingSpent action
+                    }}
+                  />
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+          {/*  */}
+        </div>
       </div>
     )
   );
