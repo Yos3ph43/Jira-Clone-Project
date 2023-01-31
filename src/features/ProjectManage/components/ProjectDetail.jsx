@@ -42,8 +42,6 @@ const ProjectDetail = () => {
   const [vlSlider, setVlSlider] = useState(0);
   const [timeRemain, setTimeRemain] = useState(0);
 
-  // const [inputTime, setTimeValue] = useState(inputValue);
-
   //search user value
   const [value, setValue] = useState("");
   const searchUser = useSelector((state) => state.project.searchUser);
@@ -65,7 +63,7 @@ const ProjectDetail = () => {
   useEffect(() => {
     dispatch(fetchProjectDetail(params.id));
     // dispatch(fetchUserByProject(params.id));
-  }, []);
+  }, [value]);
   const projectDetail = useSelector((state) => state.project.projectDetail);
   // const userDetail = useSelector((state) => state.project.userByProject);
   const params = useParams();
@@ -191,6 +189,8 @@ const ProjectDetail = () => {
                 </Popover>
               </Avatar>
             </Col>
+            {/* {{if (projectDetail.creator===) {
+            }}} */}
             <Col className="text-right" span={6}>
               {" "}
               <Button
@@ -245,6 +245,7 @@ const ProjectDetail = () => {
                                 {task.assigness.map((member) => {
                                   return (
                                     <Avatar
+                                      key={member.userId}
                                       src={member.avatar}
                                       style={{
                                         backgroundColor: "red",
@@ -332,6 +333,8 @@ const ProjectDetail = () => {
             ]}
             onFinish={(value) => {
               dispatch(createTask(value));
+              dispatch(fetchProjectDetail(params.id));
+              setOpenModal(false);
             }}
             wrapperCol={{
               span: 100,
