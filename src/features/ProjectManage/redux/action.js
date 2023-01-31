@@ -18,24 +18,24 @@ export const updateUserProfileAction = (data) => async (next) => {
     throw error;
   }
 };
-export const fetchUserByProject = (idProject) => async (next) => {
-  try {
-    const res = await requestor({
-      method: "GET",
-      url: apiPath.USER_BY_PROJECT,
-      params: { idProject },
-    });
-    console.log(res);
-    next({
-      type: actions.SET_USER_BY_PROJECT,
-      payload: res.data.content,
-    });
-  } catch (error) {
-    console.log(error);
-    if (error.response) alert(error.response.data.message);
-    throw error;
-  }
-};
+// export const fetchUserByProject = (idProject) => async (next) => {
+//   try {
+//     const res = await requestor({
+//       method: "GET",
+//       url: apiPath.USER_BY_PROJECT,
+//       params: { idProject },
+//     });
+//     console.log(res);
+//     next({
+//       type: actions.SET_USER_BY_PROJECT,
+//       payload: res.data.content,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     if (error.response) alert(error.response.data.message);
+//     throw error;
+//   }
+// };
 
 //PROJECT
 export const fetchAllProject = () => async (next) => {
