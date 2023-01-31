@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
   assignUserAction,
+  createTask,
   fetchProjectDetail,
   fetchSearchUser,
   fetchUserByProject,
@@ -204,27 +205,36 @@ const ProjectDetail = () => {
       {/* Card  */}
       <div className="site-card-wrapper">
         <Row gutter={16}>
-          <Col className="rounded-b-2xl" span={6}>
-            <Card
-              bodyStyle={{
-                backgroundColor: "#f2f5f7",
-                borderRadius: "0",
-              }}
-              className="bg-indigo-300 text-center "
-              title="Card title"
-              bordered={true}
-            >
-              <Card
-                className="bg-white"
-                style={{ width: 335, cursor: "pointer" }}
-                onClick={() => {
-                  setOpenModal(true);
-                }}
-              >
-                <p>ABC</p>
-              </Card>
-            </Card>
-          </Col>
+          {projectDetail &&
+            projectDetail.lstTask.map((item) => {
+              return (
+                <Col key={item.statusId} className="rounded-b-2xl" span={6}>
+                  <Card
+                    bodyStyle={{
+                      backgroundColor: "#f2f5f7",
+                      borderRadius: "0",
+                    }}
+                    className="bg-indigo-300 text-center "
+                    title={item.statusName}
+                    bordered={true}
+                  >
+                    {item.lstTaskDeTail.map((task) => {
+                      return (
+                        <Card
+                          className="bg-white"
+                          style={{ width: 335, cursor: "pointer" }}
+                          onClick={() => {
+                            setOpenModal(true);
+                          }}
+                        >
+                          <p>{task.taskName}</p>
+                        </Card>
+                      );
+                    })}
+                  </Card>
+                </Col>
+              );
+            })}
         </Row>
       </div>
       {/* modal project edit  */}
@@ -270,6 +280,10 @@ const ProjectDetail = () => {
         <Form
           fields={[
             {
+              name: "projectId",
+              value: params.id,
+            },
+            {
               name: "typeId",
               value: "1",
             },
@@ -281,11 +295,15 @@ const ProjectDetail = () => {
               name: "priorityId",
               value: "1",
             },
+            {
+              name: "description",
+              value: "",
+            },
             { name: "timeTrackingSpent", value: vlSlider },
             { name: "timeTrackingRemaining", value: timeRemain },
           ]}
           onFinish={(value) => {
-            console.log(value);
+            dispatch(createTask(value));
           }}
           wrapperCol={{
             span: 100,
@@ -297,8 +315,22 @@ const ProjectDetail = () => {
           }}
           autoComplete="off"
         >
+          {/* hidden  */}
+          <Form.Item hidden name="projectId" initialValue={params.id}>
+            <Input hidden disabled />
+          </Form.Item>
+          {/* hidden  */}
+
           <h4>Task Name</h4>
-          <Form.Item name="taskName">
+          <Form.Item
+            name="taskName"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên Task",
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
           <h4>Task Type</h4>
@@ -380,11 +412,20 @@ const ProjectDetail = () => {
           <Row>
             <Col span={12}>
               <h4>Original Estimate</h4>
-              <Form.Item initialValue={inputValue} name="originalEstimate">
+              <Form.Item
+                initialValue={inputValue.originalEstimate}
+                name="originalEstimate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập tổng thời gian dự kiến",
+                  },
+                ]}
+              >
                 <InputNumber
                   max={inputValue}
                   style={{ width: "95%" }}
-                  value={inputValue}
+                  value={inputValue.originalEstimate}
                   onChange={(e) => {
                     setInputValue({
                       ...inputValue,
