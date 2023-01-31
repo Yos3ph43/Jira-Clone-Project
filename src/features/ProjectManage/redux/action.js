@@ -180,3 +180,37 @@ export const removeUserProject = (data) => async () => {
     throw error;
   }
 };
+//remove user from task
+export const removeUserTask = (data) => async () => {
+  if (!window.confirm("Remove this user?")) return;
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.REMOVE_USER_FROM_TASK,
+      data,
+    });
+    console.log(res);
+    alert("User removed");
+  } catch (error) {
+    console.log(error);
+    if (error.response) alert(error.response.data.content);
+    throw error;
+  }
+};
+//assign user to task
+export const assignUserTask = (data) => async () => {
+  if (!window.confirm("Assign this user?")) return;
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.ASSIGN_USER_TASK,
+      data,
+    });
+    console.log(res);
+    alert("User assigned");
+  } catch (error) {
+    console.log(error);
+    if (error.response) alert(error.response.data.content);
+    throw error;
+  }
+};
