@@ -12,5 +12,10 @@ export const apiPath = {
   SEARCH_USER: "/api/Users/getUser",
   ASSIGN_USER: "/api/Project/assignUserProject",
   REMOVE_USER_FROM_PROJECT: "/api/Project/removeUserFromProject",
+  REMOVE_USER_FROM_TASK: "/api/Project/removeUserFromTask",
+  ASSIGN_USER_TASK: "/api/Project/assignUserTask",
   // USER_BY_PROJECT: "/api/Users/getUserByProjectId",
+  ADD_COMMENT: "/api/Comment/insertComment",
+  EDIT_COMMENT: "/api/Comment/updateComment",
+  DELETE_COMMENT: "/api/Comment/deleteComment",
 };

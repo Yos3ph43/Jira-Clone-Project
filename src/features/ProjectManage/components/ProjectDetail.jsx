@@ -35,6 +35,8 @@ import TaskDetail from "./TaskDetail";
 //   value: str.repeat(repeat),
 // });
 const ProjectDetail = () => {
+  //set Task ID state
+  const [taskId, setTaskId] = useState("");
   // slider
   const [inputValue, setInputValue] = useState({
     originalEstimate: 0,
@@ -149,10 +151,10 @@ const ProjectDetail = () => {
                             }))
                           }
                           value={value}
-                          onSelect={(value, option) => {
+                          onSelect={async (value, option) => {
                             setValue(option.label);
 
-                            dispatch(
+                            await dispatch(
                               assignUserAction({
                                 projectId: params.id,
                                 userId: option.value,
@@ -224,6 +226,7 @@ const ProjectDetail = () => {
                     >
                       {item.lstTaskDeTail.map((task) => {
                         return (
+                          /* Open Create Task modal */
                           <Card
                             size="small"
                             key={task.taskId}
@@ -234,6 +237,7 @@ const ProjectDetail = () => {
                               cursor: "pointer",
                             }}
                             onClick={() => {
+                              setTaskId(task.taskId);
                               setOpenModal(true);
                             }}
                           >
@@ -267,7 +271,7 @@ const ProjectDetail = () => {
         </div>
         {/* modal project edit  */}
         <Modal
-          width="40rem"
+          className="w-3/5"
           title="Project Edit"
           open={openModal}
           onCancel={() => {
@@ -284,9 +288,7 @@ const ProjectDetail = () => {
             </Button>,
           ]}
         >
-          <TaskDetail
-          // taskId={}
-          />
+          <TaskDetail taskId={taskId} members={projectDetail.members} />
         </Modal>
         {/* modal create task  */}
         <Modal

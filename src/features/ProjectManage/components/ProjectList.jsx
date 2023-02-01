@@ -220,9 +220,9 @@ const ProjectList = () => {
 
             <Button
               className="bg-red-800 text-white border-white hover:border-red-600 hover:text-red-600 hover:bg-neutral-800"
-              onClick={() => {
+              onClick={async () => {
                 if (window.confirm("Xác nhận xóa?")) {
-                  dispatch(deleteProject(item.id));
+                  await dispatch(deleteProject(item.id));
                   dispatch(fetchAllProject());
                 }
               }}
