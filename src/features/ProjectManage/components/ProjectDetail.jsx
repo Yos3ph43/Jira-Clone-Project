@@ -65,10 +65,10 @@ const ProjectDetail = () => {
     // dispatch(fetchUserByProject(params.id));
   }, [value]);
   const projectDetail = useSelector((state) => state.project.projectDetail);
-  // const userDetail = useSelector((state) => state.project.userByProject);
+  const user = useSelector((state) => state.user.profile);
   const params = useParams();
   console.log(projectDetail);
-  // console.log(userDetail);
+  console.log(user);
   return (
     projectDetail && (
       <div>
@@ -189,19 +189,20 @@ const ProjectDetail = () => {
                 </Popover>
               </Avatar>
             </Col>
-            {/* {{if (projectDetail.creator===) {
-            }}} */}
-            <Col className="text-right" span={6}>
-              {" "}
-              <Button
-                onClick={() => {
-                  setOpenTask(true);
-                }}
-                type="primary"
-              >
-                Create Task
-              </Button>
-            </Col>
+            {/* validate create task button  */}
+            {projectDetail.creator.id === user.id ? (
+              <Col className="text-right" span={6}>
+                {" "}
+                <Button
+                  onClick={() => {
+                    setOpenTask(true);
+                  }}
+                  type="primary"
+                >
+                  Create Task
+                </Button>
+              </Col>
+            ) : null}
           </Row>
         </div>
         {/* Card  */}
