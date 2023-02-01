@@ -1,4 +1,8 @@
-import { CheckSquareOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+  CheckSquareOutlined,
+  DeleteFilled,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import {
   AutoComplete,
   Avatar,
@@ -25,6 +29,7 @@ import { Link, useParams } from "react-router-dom";
 import {
   assignUserAction,
   createTask,
+  deleteTask,
   fetchProjectDetail,
   fetchSearchUser,
   fetchUserByProject,
@@ -47,7 +52,12 @@ const ProjectDetail = () => {
   //search user value
   const [value, setValue] = useState("");
   const searchUser = useSelector((state) => state.project.searchUser);
-
+  //default create task
+  const [valueForm, setValueForm] = useState({
+    typeId: "1",
+    statusId: "1",
+    priorityId: "1",
+  });
   //popover
   const [open, setOpen] = useState(false);
   const hide = () => {
@@ -77,7 +87,7 @@ const ProjectDetail = () => {
         <div className="pt-7 pl-7">
           <Breadcrumb>
             <Breadcrumb.Item>
-              <Link to="/">Home</Link>
+              <Link to="/list">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
               <Link to="/list">Project List</Link>
@@ -245,6 +255,9 @@ const ProjectDetail = () => {
                               <Col className="text-left" span={20}>
                                 <h4>{task.taskName}</h4>
                                 <p>{task.priorityTask.priority}</p>
+                                <p>
+                                  {task.taskTypeDetail.taskType.toUpperCase()}
+                                </p>
                               </Col>
                               <Col span={4}>
                                 {task.assigness.map((member) => {
@@ -258,6 +271,16 @@ const ProjectDetail = () => {
                                     ></Avatar>
                                   );
                                 })}
+                                {/* delete button bú đi  */}
+                                {/* <Button
+                                  onClick={async () => {
+                                    await deleteTask(task.taskId);
+                                    fetchProjectDetail(params.id);
+                                  }}
+                                  danger
+                                >
+                                  <DeleteFilled />
+                                </Button> */}
                               </Col>
                             </Row>
                           </Card>
@@ -317,20 +340,25 @@ const ProjectDetail = () => {
               },
               {
                 name: "typeId",
-                value: "1",
+                value: valueForm.typeId,
               },
               {
                 name: "statusId",
-                value: "1",
+                value: valueForm.statusId,
               },
               {
                 name: "priorityId",
-                value: "1",
+                value: valueForm.priorityId,
               },
               {
                 name: "description",
                 value: "",
               },
+              // {
+              //   name: "listUserAsign",
+              //   value: [],
+              // },
+
               { name: "timeTrackingSpent", value: vlSlider },
               { name: "timeTrackingRemaining", value: timeRemain },
             ]}
@@ -338,6 +366,7 @@ const ProjectDetail = () => {
               dispatch(createTask(value));
               dispatch(fetchProjectDetail(params.id));
               setOpenModal(false);
+              console.log(value);
             }}
             wrapperCol={{
               span: 100,
@@ -370,16 +399,19 @@ const ProjectDetail = () => {
             <h4>Task Type</h4>
             <Form.Item name="typeId">
               <Select
+                onChange={(value) => {
+                  setValueForm(...valueForm, value.typeId);
+                }}
                 options={[
                   {
                     value: "1",
                     label: "Bug",
-                    name: "1",
+                    // name: "1",
                   },
                   {
                     value: "2",
                     label: "New Task",
-                    name: "2",
+                    // name: "2",
                   },
                 ]}
               />

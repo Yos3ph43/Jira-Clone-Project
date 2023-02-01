@@ -18,4 +18,5 @@ export const apiPath = {
   ADD_COMMENT: "/api/Comment/insertComment",
   EDIT_COMMENT: "/api/Comment/updateComment",
   DELETE_COMMENT: "/api/Comment/deleteComment",
+  DELETE_TASK: "/api/Project/removeTask",
 };

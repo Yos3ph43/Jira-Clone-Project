@@ -108,12 +108,27 @@ export const createProject = (data) => async () => {
 // TASK
 export const createTask = (data) => async () => {
   try {
+    console.log(data);
     const res = await requestor({
       method: "POST",
       url: apiPath.CREATE_TASK,
       data,
     });
     alert("Thêm task thành công");
+    console.log(res);
+  } catch (error) {
+    throw alert(error.response.data.content);
+  }
+};
+export const deleteTask = (taskId) => async () => {
+  if (!window.confirm("Remove this task?")) return;
+  try {
+    const res = await requestor({
+      method: "POST",
+      url: apiPath.DELETE_TASK,
+      params: { taskId },
+    });
+    alert("Deleted");
     console.log(res);
   } catch (error) {
     throw alert(error.response.data.content);
