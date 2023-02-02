@@ -21,5 +21,5 @@ export const apiPath = {
   DELETE_TASK: "/api/Project/removeTask",
   UPDATE_STATUS: "/api/Project/updateStatus",
   // UPDATE_ESTIMATE: "/api/Project/updateEstimate",
-  UPDATE_TIME_TRACKING: "/api/Project/updateTimeTracking",
+  // UPDATE_TIME_TRACKING: "/api/Project/updateTimeTracking",
 };

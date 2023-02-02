@@ -159,19 +159,19 @@ export const updateStatusTask = (data) => async () => {
 //     throw alert(error.response.data.content);
 //   }
 // };
-export const updateTimeTrackingSpent = (data) => async () => {
-  try {
-    const res = await requestor({
-      method: "PUT",
-      url: apiPath.UPDATE_TIME_TRACKING,
-      data,
-    });
-    console.log(res);
-  } catch (error) {
-    console.log(error);
-    throw alert(error.response.data.content);
-  }
-};
+// export const updateTimeTrackingSpent = (data) => async () => {
+//   try {
+//     const res = await requestor({
+//       method: "PUT",
+//       url: apiPath.UPDATE_TIME_TRACKING,
+//       data,
+//     });
+//     console.log(res);
+//   } catch (error) {
+//     console.log(error);
+//     throw alert(error.response.data.content);
+//   }
+// };
 
 export const fetchTaskDetail = (taskId) => async (next) => {
   try {
