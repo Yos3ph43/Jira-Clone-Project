@@ -1,14 +1,25 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Avatar, InputNumber, Popover, Select, Slider, Form } from "antd";
+import { Avatar, InputNumber, Popover, Select, Slider, Form, Spin } from "antd";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { assignUserTask, fetchTaskDetail } from "../redux/action";
+import {
+  assignUserTask,
+  fetchProjectDetail,
+  fetchTaskDetail,
+  updateEstimateTime,
+  updateStatusTask,
+  updateTimeTrackingSpent,
+} from "../redux/action";
 import ProjectListMembers from "./ProjectListMembers";
 import TaskComments from "./TaskComments";
 import parse from "html-react-parser";
+import { useParams } from "react-router-dom";
 
 const TaskDetail = (props) => {
+  const params = useParams();
+  //spin loading
+  const [loading, setLoading] = useState(false);
   //popover
   const [open, setOpen] = useState(false);
   const hide = () => {
@@ -19,11 +30,13 @@ const TaskDetail = (props) => {
   };
   //taskId
   const { taskId, members } = props;
+  console.log(taskId);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchTaskDetail(taskId));
   }, [taskId]);
   const task = useSelector((state) => state.project.taskDetail);
+  console.log(task);
   // priority
   const priority = () => {
     switch (task.priorityId) {
@@ -73,35 +86,43 @@ const TaskDetail = (props) => {
           {/* Status */}
           <div>
             <h3>STATUS</h3>
-
-            <Form fields={[{ name: "statusId", value: task.statusId }]}>
-              <Form.Item name="statusId">
-                <Select
-                  onSelect={(value) => {
-                    // dispatch update statusId action
-                  }}
-                  className="w-32"
-                  options={[
-                    {
-                      value: "1",
-                      label: "Backlog",
-                    },
-                    {
-                      value: "2",
-                      label: "Selected for Development",
-                    },
-                    {
-                      value: "3",
-                      label: "In Progress",
-                    },
-                    {
-                      value: "4",
-                      label: "Done",
-                    },
-                  ]}
-                />
-              </Form.Item>
-            </Form>
+            <Spin spinning={loading}>
+              <Form fields={[{ name: "statusId", value: task.statusId }]}>
+                <Form.Item name="statusId">
+                  <Select
+                    onSelect={async (value) => {
+                      setLoading(true);
+                      const updateValue = { taskId: taskId, statusId: value };
+                      await dispatch(updateStatusTask(updateValue));
+                      dispatch(fetchProjectDetail(params.id));
+                      dispatch(fetchTaskDetail(taskId));
+                      setTimeout(() => {
+                        setLoading(false);
+                      }, 500);
+                    }}
+                    className="w-32"
+                    options={[
+                      {
+                        value: "1",
+                        label: "Backlog",
+                      },
+                      {
+                        value: "2",
+                        label: "Selected for Development",
+                      },
+                      {
+                        value: "3",
+                        label: "In Progress",
+                      },
+                      {
+                        value: "4",
+                        label: "Done",
+                      },
+                    ]}
+                  />
+                </Form.Item>
+              </Form>
+            </Spin>
           </div>
           {/* ASSIGNEES / member */}
           <div>
@@ -148,6 +169,7 @@ const TaskDetail = (props) => {
                     <Select
                       className="w-52"
                       options={members.map((member) => ({
+                        key: member.userId,
                         value: member.userId,
                         label: `${member.name} - ${member.userId}`,
                       }))}
@@ -190,9 +212,24 @@ const TaskDetail = (props) => {
             >
               <Form.Item name="originalEstimate">
                 <InputNumber
-                  onChange={(value) => {
-                    // dispatch update originalEstimate action
-                  }}
+                  disabled
+                  //API banh xác
+                  // onChange={async (value) => {
+                  //   setLoading(true);
+
+                  //   const updateValue = {
+                  //     taskId: taskId,
+                  //     originalEstimate: value,
+                  //   };
+                  //   if (value) {
+                  //     await dispatch(updateEstimateTime(updateValue));
+                  //     dispatch(fetchTaskDetail(taskId));
+                  //     setTimeout(() => {
+                  //       setLoading(false);
+                  //     }, 500);
+                  //   }
+                  //   console.log(updateValue);
+                  // }}
                 />
               </Form.Item>
             </Form>
@@ -203,7 +240,10 @@ const TaskDetail = (props) => {
             <div>
               <Form
                 fields={[
-                  { name: "timeTrackingSpent", value: task.timeTrackingSpent },
+                  {
+                    name: "timeTrackingSpent",
+                    value: task.timeTrackingSpent,
+                  },
                 ]}
               >
                 <div className="flex justify-between">
@@ -214,9 +254,19 @@ const TaskDetail = (props) => {
                   <Slider
                     min={0}
                     max={task.originalEstimate}
-                    onChange={(value) => {
-                      // dispatch update timeTrackingSpent action
-                    }}
+                    //API BANH XÁC
+                    // onChange={(value) => {
+                    //   console.log(value);
+
+                    //   const updateValue = {
+                    //     taskId: taskId,
+                    //     timeTrackingSpent: value,
+                    //     timeTrackingRemaining: task.originalEstimate - value,
+                    //   };
+                    //   dispatch(updateTimeTrackingSpent(updateValue));
+                    //   dispatch(fetchTaskDetail(taskId));
+                    //   console.log(updateValue);
+                    // }}
                   />
                 </Form.Item>
               </Form>

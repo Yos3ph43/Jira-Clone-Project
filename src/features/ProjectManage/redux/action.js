@@ -124,13 +124,51 @@ export const deleteTask = (taskId) => async () => {
   if (!window.confirm("Remove this task?")) return;
   try {
     const res = await requestor({
-      method: "POST",
+      method: "DELETE",
       url: apiPath.DELETE_TASK,
       params: { taskId },
     });
     alert("Deleted");
     console.log(res);
   } catch (error) {
+    throw alert(error.response.data.content);
+  }
+};
+export const updateStatusTask = (data) => async () => {
+  try {
+    const res = await requestor({
+      method: "PUT",
+      url: apiPath.UPDATE_STATUS,
+      data,
+    });
+    console.log(res);
+  } catch (error) {
+    throw alert(error.response.data.content);
+  }
+};
+// export const updateEstimateTime = (data) => async () => {
+//   try {
+//     const res = await requestor({
+//       method: "PUT",
+//       url: apiPath.UPDATE_ESTIMATE,
+//       data,
+//     });
+//     console.log(res);
+//   } catch (error) {
+//     console.log(error);
+//     throw alert(error.response.data.content);
+//   }
+// };
+export const updateTimeTrackingSpent = (data) => async () => {
+  try {
+    const res = await requestor({
+      method: "PUT",
+      url: apiPath.UPDATE_TIME_TRACKING,
+      data,
+    });
+    console.log(res);
+  } catch (error) {
+    console.log(error);
     throw alert(error.response.data.content);
   }
 };

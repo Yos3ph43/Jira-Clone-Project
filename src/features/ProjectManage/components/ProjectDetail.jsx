@@ -19,6 +19,7 @@ import {
   Select,
   Slider,
   Space,
+  Spin,
   Table,
 } from "antd";
 import React, { useState } from "react";
@@ -36,10 +37,12 @@ import {
 } from "../redux/action";
 import ProjectListMembers from "./ProjectListMembers";
 import TaskDetail from "./TaskDetail";
-// const mockVal = (str, repeat = 1) => ({
-//   value: str.repeat(repeat),
-// });
+
 const ProjectDetail = () => {
+  // loading spin
+  const [loading, setLoading] = useState(false);
+  // resetFields form
+  const [form] = Form.useForm();
   //set Task ID state
   const [taskId, setTaskId] = useState("");
   // slider
@@ -156,6 +159,7 @@ const ProjectDetail = () => {
                           options={
                             searchUser &&
                             searchUser.map((user) => ({
+                              key: user.userId,
                               label: `${user.name} (ID: ${user.userId})`,
                               value: `${user.userId}`,
                             }))
@@ -271,16 +275,6 @@ const ProjectDetail = () => {
                                     ></Avatar>
                                   );
                                 })}
-                                {/* delete button bú đi  */}
-                                {/* <Button
-                                  onClick={async () => {
-                                    await deleteTask(task.taskId);
-                                    fetchProjectDetail(params.id);
-                                  }}
-                                  danger
-                                >
-                                  <DeleteFilled />
-                                </Button> */}
                               </Col>
                             </Row>
                           </Card>
@@ -292,23 +286,46 @@ const ProjectDetail = () => {
               })}
           </Row>
         </div>
-        {/* modal project edit  */}
+        {/* modal task edit  */}
         <Modal
           className="w-3/5"
-          title="Project Edit"
+          title={taskId}
           open={openModal}
           onCancel={() => {
             setOpenModal(false);
           }}
           footer={[
-            <Button
-              onClick={() => {
-                setOpenModal(false);
-              }}
-              key="cancel"
-            >
-              Cancel
-            </Button>,
+            <Space>
+              <Spin spinning={loading}>
+                <Button
+                  onClick={async () => {
+                    try {
+                      setLoading(true);
+                      await dispatch(deleteTask(taskId));
+                      dispatch(fetchProjectDetail(params.id));
+                      setTimeout(() => {
+                        setOpenModal(false);
+                        setLoading(false);
+                      }, 500);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }}
+                  danger
+                >
+                  <DeleteFilled />
+                </Button>
+              </Spin>
+              ,
+              <Button
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+                key="cancel"
+              >
+                Cancel
+              </Button>
+            </Space>,
           ]}
         >
           <TaskDetail taskId={taskId} members={projectDetail.members} />
@@ -332,250 +349,266 @@ const ProjectDetail = () => {
             </Button>,
           ]}
         >
-          <Form
-            fields={[
-              {
-                name: "projectId",
-                value: params.id,
-              },
-              {
-                name: "typeId",
-                value: valueForm.typeId,
-              },
-              {
-                name: "statusId",
-                value: valueForm.statusId,
-              },
-              {
-                name: "priorityId",
-                value: valueForm.priorityId,
-              },
-              {
-                name: "description",
-                value: "",
-              },
-              // {
-              //   name: "listUserAsign",
-              //   value: [],
-              // },
-
-              { name: "timeTrackingSpent", value: vlSlider },
-              { name: "timeTrackingRemaining", value: timeRemain },
-            ]}
-            onFinish={(value) => {
-              dispatch(createTask(value));
-              dispatch(fetchProjectDetail(params.id));
-              setOpenModal(false);
-              console.log(value);
-            }}
-            wrapperCol={{
-              span: 100,
-            }}
-            layout="horizontal"
-            style={{
-              maxWidth: 600,
-              padding: "1rem 1rem 0 1rem",
-            }}
-            autoComplete="off"
-          >
-            {/* hidden  */}
-            <Form.Item hidden name="projectId" initialValue={params.id}>
-              <Input hidden disabled />
-            </Form.Item>
-            {/* hidden  */}
-
-            <h4>Task Name</h4>
-            <Form.Item
-              name="taskName"
-              rules={[
+          <Spin spinning={loading}>
+            <Form
+              form={form}
+              fields={[
                 {
-                  required: true,
-                  message: "Vui lòng nhập tên Task",
+                  name: "projectId",
+                  value: params.id,
                 },
+                {
+                  name: "typeId",
+                  value: valueForm.typeId,
+                },
+                {
+                  name: "statusId",
+                  value: valueForm.statusId,
+                },
+                {
+                  name: "priorityId",
+                  value: valueForm.priorityId,
+                },
+                {
+                  name: "description",
+                  value: "",
+                },
+                {
+                  name: "listUserAsign",
+                  value: [],
+                },
+
+                { name: "timeTrackingSpent", value: vlSlider },
+                { name: "timeTrackingRemaining", value: timeRemain },
               ]}
+              onFinish={async (value) => {
+                await dispatch(createTask(value));
+                dispatch(fetchProjectDetail(params.id));
+                setValueForm({ typeId: "1", statusId: "1", priorityId: "1" });
+                setLoading(true);
+                setTimeout(() => {
+                  setOpenTask(false);
+                  form.resetFields();
+                  setLoading(false);
+                }, 1000);
+              }}
+              wrapperCol={{
+                span: 100,
+              }}
+              layout="horizontal"
+              style={{
+                maxWidth: 600,
+                padding: "1rem 1rem 0 1rem",
+              }}
+              autoComplete="off"
             >
-              <Input />
-            </Form.Item>
-            <h4>Task Type</h4>
-            <Form.Item name="typeId">
-              <Select
-                onChange={(value) => {
-                  setValueForm(...valueForm, value.typeId);
-                }}
-                options={[
+              {/* hidden  */}
+              <Form.Item hidden name="projectId" initialValue={params.id}>
+                <Input hidden disabled />
+              </Form.Item>
+              {/* hidden  */}
+
+              <h4>Task Name</h4>
+              <Form.Item
+                name="taskName"
+                rules={[
                   {
-                    value: "1",
-                    label: "Bug",
-                    // name: "1",
-                  },
-                  {
-                    value: "2",
-                    label: "New Task",
-                    // name: "2",
+                    required: true,
+                    message: "Please input Task Name",
                   },
                 ]}
-              />
-            </Form.Item>
-            <Row>
-              <Col span={12}>
-                <h4>Status</h4>
-                <Form.Item name="statusId">
-                  <Select
-                    style={{
-                      width: "95%",
-                    }}
-                    options={[
-                      {
-                        value: "1",
-                        label: "Backlog",
-                        // name: "1",
-                      },
-                      {
-                        value: "2",
-                        label: "Selected for Development",
-                        // name: "2",
-                      },
-                      {
-                        value: "3",
-                        label: "In Progress",
-                        // name: "3",
-                      },
-                      {
-                        value: "4",
-                        label: "Done",
-                        // name: "4",
-                      },
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <h4>Priority</h4>
-                <Form.Item name="priorityId">
-                  <Select
-                    options={[
-                      {
-                        value: "1",
-                        label: "HIGH",
-                      },
-                      {
-                        value: "2",
-                        label: "MEDIUM",
-                      },
-                      {
-                        value: "3",
-                        label: "LOW",
-                      },
-                      {
-                        value: "4",
-                        label: "LOWEST",
-                      },
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <h4>Original Estimate</h4>
-                <Form.Item
-                  initialValue={inputValue.originalEstimate}
-                  name="originalEstimate"
-                  rules={[
+              >
+                <Input />
+              </Form.Item>
+              <h4>Task Type</h4>
+              <Form.Item name="typeId">
+                <Select
+                  onChange={(value) => {
+                    setValueForm({ ...valueForm, typeId: value });
+                  }}
+                  options={[
                     {
-                      required: true,
-                      message: "Vui lòng nhập tổng thời gian dự kiến",
+                      value: "1",
+                      label: "Bug",
+                      // name: "1",
+                    },
+                    {
+                      value: "2",
+                      label: "New Task",
+                      // name: "2",
                     },
                   ]}
-                >
-                  <InputNumber
-                    max={inputValue}
-                    style={{ width: "95%" }}
-                    value={inputValue.originalEstimate}
-                    onChange={(e) => {
-                      setInputValue({
-                        ...inputValue,
-                        originalEstimate: e,
-                      });
-                      setVlSlider(e);
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <h4>Time Tracking (hours)</h4>
-                <Form.Item>
-                  <Slider
-                    min={0}
-                    max={inputValue.originalEstimate}
-                    onChange={(vlSlider) => {
-                      setVlSlider(vlSlider);
-                      setTimeRemain(inputValue.originalEstimate - vlSlider);
-                    }}
-                    value={vlSlider}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <h4>Assignees</h4>
-                <Form.Item name="listUserAsign">
-                  <Select
-                    style={{ width: "95%" }}
-                    mode="multiple"
-                    options={
-                      projectDetail &&
-                      projectDetail.members.map((member) => ({
-                        value: member.userId,
-                        label: `${member.name} - ${member.userId}`,
-                      }))
-                    }
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <h4 className="font-normal">Time spent</h4>
-                <Form.Item name="timeTrackingSpent">
-                  <InputNumber
-                    min={0}
-                    max={inputValue.originalEstimate}
-                    style={{ width: "95%" }}
-                    onChange={(input) => {
-                      setVlSlider(input);
-                      setTimeRemain(inputValue.originalEstimate - input);
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <h4 className="font-normal">Time remaining</h4>
-                <Form.Item name="timeTrackingRemaining">
-                  <InputNumber
-                    min={0}
-                    style={{ width: "95%" }}
-                    max={inputValue.originalEstimate - vlSlider}
-                    disabled
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <h4>Description</h4>
-            <Form.Item name="description">
-              <ReactQuill
-                theme="snow"
-                style={{
-                  height: "5rem",
-                  marginBottom: "2rem",
-                }}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Create
-              </Button>
-            </Form.Item>
-          </Form>
+                />
+              </Form.Item>
+              <Row>
+                <Col span={12}>
+                  <h4>Status</h4>
+                  <Form.Item name="statusId">
+                    <Select
+                      onChange={(value) => {
+                        setValueForm({ ...valueForm, statusId: value });
+                      }}
+                      style={{
+                        width: "95%",
+                      }}
+                      options={[
+                        {
+                          value: "1",
+                          label: "Backlog",
+                          // name: "1",
+                        },
+                        {
+                          value: "2",
+                          label: "Selected for Development",
+                          // name: "2",
+                        },
+                        {
+                          value: "3",
+                          label: "In Progress",
+                          // name: "3",
+                        },
+                        {
+                          value: "4",
+                          label: "Done",
+                          // name: "4",
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <h4>Priority</h4>
+                  <Form.Item name="priorityId">
+                    <Select
+                      onChange={(value) => {
+                        setValueForm({ ...valueForm, priorityId: value });
+                      }}
+                      options={[
+                        {
+                          value: "1",
+                          label: "HIGH",
+                        },
+                        {
+                          value: "2",
+                          label: "MEDIUM",
+                        },
+                        {
+                          value: "3",
+                          label: "LOW",
+                        },
+                        {
+                          value: "4",
+                          label: "LOWEST",
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <h4>Original Estimate</h4>
+                  <Form.Item
+                    initialValue={inputValue.originalEstimate}
+                    name="originalEstimate"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập tổng thời gian dự kiến",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      max={inputValue}
+                      style={{ width: "95%" }}
+                      value={inputValue.originalEstimate}
+                      onChange={(e) => {
+                        setInputValue({
+                          ...inputValue,
+                          originalEstimate: e,
+                        });
+                        setVlSlider(e);
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <h4>Time Tracking (hours)</h4>
+                  <Form.Item>
+                    <Slider
+                      min={0}
+                      max={inputValue.originalEstimate}
+                      onChange={(vlSlider) => {
+                        setVlSlider(vlSlider);
+                        setTimeRemain(inputValue.originalEstimate - vlSlider);
+                      }}
+                      value={vlSlider}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <h4>Assignees</h4>
+                  <Form.Item name="listUserAsign">
+                    <Select
+                      style={{ width: "95%" }}
+                      mode="multiple"
+                      options={
+                        projectDetail &&
+                        projectDetail.members.map((member) => ({
+                          key: member.userId,
+                          value: member.userId,
+                          label: `${member.name} - ${member.userId}`,
+                        }))
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <h4 className="font-normal">Time spent</h4>
+                  <Form.Item name="timeTrackingSpent">
+                    <InputNumber
+                      min={0}
+                      max={inputValue.originalEstimate}
+                      style={{ width: "95%" }}
+                      onChange={(input) => {
+                        setVlSlider(input);
+                        setTimeRemain(inputValue.originalEstimate - input);
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <h4 className="font-normal">Time remaining</h4>
+                  <Form.Item name="timeTrackingRemaining">
+                    <InputNumber
+                      min={0}
+                      style={{ width: "95%" }}
+                      max={inputValue.originalEstimate - vlSlider}
+                      disabled
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <h4>Description</h4>
+              <Form.Item name="description">
+                <ReactQuill
+                  theme="snow"
+                  style={{
+                    height: "5rem",
+                    marginBottom: "2rem",
+                  }}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Create
+                </Button>
+              </Form.Item>
+            </Form>
+          </Spin>
+
           {/* <TaskCreate /> */}
         </Modal>
       </div>

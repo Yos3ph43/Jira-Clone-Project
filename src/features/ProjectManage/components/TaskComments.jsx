@@ -60,7 +60,7 @@ const TaskComments = (props) => {
         </Form>
         {comments.length > 0 &&
           comments.map((item) => (
-            <div className="flex mb-7">
+            <div key={item.id} className="flex mb-7">
               <div>
                 <Avatar
                   src={item.avatar}
