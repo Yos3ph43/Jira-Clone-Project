@@ -8,6 +8,7 @@ import ProjectList from "features/ProjectManage/components/ProjectList";
 import UserProfile from "features/ProjectManage/components/UserProfile";
 import Auth from "features/Login/Auth";
 import ProjectCreate from "features/ProjectManage/components/ProjectCreate";
+import AppRoute from "app/AppRoute";
 
 function App() {
   return (
@@ -19,7 +20,11 @@ function App() {
           <Route path="/auth/signup" element={<Signup />} />
         </Route>
         {/* home */}
-        <Route exact path="/" element={<ProjectManage />}>
+        <Route
+          exact
+          path="/"
+          element={<AppRoute element={<ProjectManage />} isPrivate />}
+        >
           <Route path="/list" element={<ProjectList />} />
           <Route path="/create" element={<ProjectCreate />} />
           <Route path="/detail/:id" element={<ProjectDetail />} />

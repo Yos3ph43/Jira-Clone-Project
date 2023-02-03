@@ -38,67 +38,68 @@ const ProjectManage = () => {
 
   console.log(user);
   return (
-    <div>
-      <Layout>
-        <Header className="header">
-          <div className="px-5 flex justify-between">
-            <div className="text-gray-200 text-2xl font-semibold">
-              Jira logo Placeholder
-            </div>
-            <div>
-              <span className="text-gray-400 text-xl font-semibold">
-                {user.name}
-              </span>
-              <Button
-                className="ml-2 px-2 bg-red-900 text-white border-transparent  hover:text-neutral-900 hover:bg-red-800 "
-                onClick={handleLogout}
-              >
-                <LogoutOutlined />
-              </Button>
-            </div>
-          </div>
-        </Header>
+    user && (
+      <div>
         <Layout>
-          <Content style={{}}>
-            <Layout
-              style={{
-                background: "#fff",
-              }}
-            >
-              <Sider
-                className="min-h-screen"
+          <Header className="header">
+            <div className="px-5 flex justify-between">
+              <div className="text-gray-200 text-2xl font-semibold">
+                Jira logo Placeholder
+              </div>
+              <div>
+                <span className="text-gray-400 text-xl font-semibold">
+                  {user.name}
+                </span>
+                <Button
+                  className="ml-2 px-2 bg-red-900 text-white border-transparent  hover:text-neutral-900 hover:bg-red-800 "
+                  onClick={handleLogout}
+                >
+                  <LogoutOutlined />
+                </Button>
+              </div>
+            </div>
+          </Header>
+          <Layout>
+            <Content style={{}}>
+              <Layout
                 style={{
                   background: "#fff",
                 }}
-                width={250}
               >
-                <Menu
-                  mode="inline"
-                  defaultSelectedKeys={["1"]}
-                  defaultOpenKeys={["sub1"]}
-                  theme="dark"
+                <Sider
+                  className="min-h-screen"
                   style={{
-                    height: "100%",
-                    padding: "24px 0",
+                    background: "#fff",
                   }}
-                  items={navItems}
-                  className=""
-                />
-              </Sider>
-              <Content
-                style={{
-                  padding: "24px 24px",
-                  minHeight: 280,
-                }}
-              >
-                <Outlet />
-              </Content>
-            </Layout>
-          </Content>
+                  width={250}
+                >
+                  <Menu
+                    mode="inline"
+                    defaultSelectedKeys={["1"]}
+                    defaultOpenKeys={["sub1"]}
+                    theme="dark"
+                    style={{
+                      height: "100%",
+                      padding: "24px 0",
+                    }}
+                    items={navItems}
+                    className=""
+                  />
+                </Sider>
+                <Content
+                  style={{
+                    padding: "24px 24px",
+                    minHeight: 280,
+                  }}
+                >
+                  <Outlet />
+                </Content>
+              </Layout>
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
-      <Link to="/auth/login">Temp link to login</Link>
-    </div>
+      </div>
+    )
   );
 };
 
