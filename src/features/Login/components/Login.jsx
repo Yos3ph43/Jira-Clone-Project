@@ -88,7 +88,7 @@ const Login = () => {
 
       <div className="text-slate-400 flex justify-center">
         <div>
-          <p className="m-0 p-0">Mail: luan43@gmail.com </p>
+          <p className="m-0 p-0">Mail: Amen@jesus.christ </p>
           <p className="m-0 p-0">Pass: 123456 </p>
         </div>
       </div>

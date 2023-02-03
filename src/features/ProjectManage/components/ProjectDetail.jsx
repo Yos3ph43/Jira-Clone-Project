@@ -148,52 +148,50 @@ const ProjectDetail = () => {
                   placement="bottom"
                   // key={item.id}
                   content={
-                    <>
-                      <Space>
-                        <AutoComplete
-                          className="w-56"
-                          onSearch={(value) => {
-                            console.log(value);
-                            dispatch(fetchSearchUser(value));
-                          }}
-                          options={
-                            searchUser &&
-                            searchUser.map((user) => ({
-                              key: user.userId,
-                              label: `${user.name} (ID: ${user.userId})`,
-                              value: `${user.userId}`,
-                            }))
-                          }
-                          value={value}
-                          onSelect={async (value, option) => {
-                            setValue(option.label);
+                    <Space>
+                      <AutoComplete
+                        className="w-56"
+                        onSearch={(value) => {
+                          console.log(value);
+                          dispatch(fetchSearchUser(value));
+                        }}
+                        options={
+                          searchUser &&
+                          searchUser.map((user) => ({
+                            key: user.userId,
+                            label: `${user.name} (ID: ${user.userId})`,
+                            value: `${user.userId}`,
+                          }))
+                        }
+                        value={value}
+                        onSelect={async (value, option) => {
+                          setValue(option.label);
 
-                            await dispatch(
-                              assignUserAction({
-                                projectId: params.id,
-                                userId: option.value,
-                              })
-                            );
-                            dispatch(fetchProjectDetail(params.id));
-                            hide();
-                            setValue("");
-                          }}
-                          onChange={(txt) => {
-                            setValue(txt);
-                          }}
-                        />
+                          await dispatch(
+                            assignUserAction({
+                              projectId: params.id,
+                              userId: option.value,
+                            })
+                          );
+                          dispatch(fetchProjectDetail(params.id));
+                          hide();
+                          setValue("");
+                        }}
+                        onChange={(txt) => {
+                          setValue(txt);
+                        }}
+                      />
 
-                        <Button
-                          danger
-                          onClick={() => {
-                            hide();
-                            setValue("");
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </Space>
-                    </>
+                      <Button
+                        danger
+                        onClick={() => {
+                          hide();
+                          setValue("");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Space>
                   }
                   trigger="click"
                   open={open}
@@ -299,6 +297,8 @@ const ProjectDetail = () => {
               <Spin spinning={loading}>
                 <Button
                   onClick={async () => {
+                    if (!window.confirm("Remove this task?")) return;
+
                     try {
                       setLoading(true);
                       await dispatch(deleteTask(taskId));
@@ -309,6 +309,7 @@ const ProjectDetail = () => {
                       }, 500);
                     } catch (error) {
                       console.log(error);
+                      setLoading(false);
                     }
                   }}
                   danger
@@ -316,7 +317,7 @@ const ProjectDetail = () => {
                   <DeleteFilled />
                 </Button>
               </Spin>
-              ,
+
               <Button
                 onClick={() => {
                   setOpenModal(false);

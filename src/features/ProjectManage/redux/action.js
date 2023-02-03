@@ -121,7 +121,7 @@ export const createTask = (data) => async () => {
   }
 };
 export const deleteTask = (taskId) => async () => {
-  if (!window.confirm("Remove this task?")) return;
+  // if (!window.confirm("Remove this task?")) return;
   try {
     const res = await requestor({
       method: "DELETE",
