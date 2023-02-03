@@ -23,7 +23,7 @@ function App() {
         <Route
           exact
           path="/"
-          element={<AppRoute element={<ProjectManage />} isPrivate />}
+          element={<AppRoute element={ProjectManage} isPrivate />}
         >
           <Route path="/list" element={<ProjectList />} />
           <Route path="/create" element={<ProjectCreate />} />
