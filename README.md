@@ -35,10 +35,10 @@
     	-Edit profile
     	-Logout
 
-## LINK GITHUB: https://github.com/Yos3ph43/Project-Management-Project.git
+`LINK GITHUB` https://github.com/Yos3ph43/Project-Management-Project.git
 
-## LINK DOC: https://docs.google.com/document/d/15bM6Q53YLqQs6LuhDf7CYdJ3kco3WMJQNQRQN39kfLc/edit?usp=sharing
+`LINK DOC` https://docs.google.com/document/d/15bM6Q53YLqQs6LuhDf7CYdJ3kco3WMJQNQRQN39kfLc/edit?usp=sharing
 
-## LINK DEMO: https://youtu.be/ek81y_TwQ5c
+`LINK DEMO` https://youtu.be/ek81y_TwQ5c
 
-## LINK VERCEL: https://jira-clone-yos3ph43.vercel.app/auth/login
+`LINK VERCEL` https://jira-clone-yos3ph43.vercel.app/auth/login
