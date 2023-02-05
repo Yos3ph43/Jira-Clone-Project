@@ -1,70 +1,44 @@
-# Getting Started with Create React App
+## BC37 Final project members:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 1/login-signup page => Minh Luân
 
-## Available Scripts
+### 2/main page:
 
-In the project directory, you can run:
+#### 2.1/Project manage page (Home) => Minh Luân
 
-### `npm start`
+#### 2.1.1/Projects list:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    	-Show project list => Sỹ Bảo
+    	-Edit project, Delete project => Sỹ Bảo
+    	-Add member to project => Minh Luân
+    	-Navigate to project detail page => Sỹ Bảo
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### 2.1.2/Project detail page:
 
-### `npm test`
+    	-Show project details => Sỹ Bảo
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    	-Creat new task (only show for pj owner) => Sỹ Bảo
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    	-Add new member => Minh Luân
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    	-Edit task:
+    		+Edit task form (edit form, status, time track) => Sỹ Bảo (lỗi api timeTracking ❌)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    		+Assign/remove task's member =>Minh Luân (lỗi api ❌)
+    		+Add/Edit/Delete comments => Minh Luân
 
-### `npm run eject`
+#### 2.2/Create new project => Sỹ Bảo
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### 2.3/User profile: => Minh Luân
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    	-Edit profile
+    	-Logout
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## LINK GITHUB: https://github.com/Yos3ph43/Project-Management-Project.git
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## LINK DOC: https://docs.google.com/document/d/15bM6Q53YLqQs6LuhDf7CYdJ3kco3WMJQNQRQN39kfLc/edit?usp=sharing
 
-## Learn More
+## LINK DEMO: https://youtu.be/ek81y_TwQ5c
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## LINK VERCEL: https://jira-clone-yos3ph43.vercel.app/auth/login
