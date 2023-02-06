@@ -12,8 +12,6 @@ import {
 } from "../redux/action";
 
 const ProjectListMembers = (props) => {
-  console.log(props);
-
   const dispatch = useDispatch();
   const projectId = props.projectId;
   const taskId = props.taskId;

@@ -82,8 +82,7 @@ const ProjectDetail = () => {
   const projectDetail = useSelector((state) => state.project.projectDetail);
   const user = useSelector((state) => state.user.profile);
   const params = useParams();
-  console.log(projectDetail);
-  console.log(user);
+
   return (
     projectDetail && (
       <div>
@@ -152,7 +151,6 @@ const ProjectDetail = () => {
                       <AutoComplete
                         className="w-56"
                         onSearch={(value) => {
-                          console.log(value);
                           dispatch(fetchSearchUser(value));
                         }}
                         options={
@@ -308,7 +306,6 @@ const ProjectDetail = () => {
                         setLoading(false);
                       }, 500);
                     } catch (error) {
-                      console.log(error);
                       setLoading(false);
                     }
                   }}

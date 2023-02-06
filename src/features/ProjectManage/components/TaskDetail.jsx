@@ -30,13 +30,11 @@ const TaskDetail = (props) => {
   };
   //taskId
   const { taskId, members } = props;
-  console.log(taskId);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchTaskDetail(taskId));
   }, [taskId]);
   const task = useSelector((state) => state.project.taskDetail);
-  console.log(task);
   // priority
   const priority = () => {
     switch (task.priorityId) {
@@ -54,7 +52,6 @@ const TaskDetail = (props) => {
     }
   };
 
-  console.log(props, task);
   return (
     task && (
       <div className="flex p-5">
@@ -174,7 +171,6 @@ const TaskDetail = (props) => {
                         label: `${member.name} - ${member.userId}`,
                       }))}
                       onSelect={async (userId) => {
-                        console.log({ userId, taskId });
                         await dispatch(
                           assignUserTask({
                             userId,

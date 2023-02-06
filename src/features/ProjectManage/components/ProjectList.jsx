@@ -35,7 +35,6 @@ const ProjectList = () => {
   const searchUser = useSelector((state) => state.project.searchUser);
   const projectDetail = useSelector((state) => state.project.projectDetail);
   const dispatch = useDispatch();
-
   // const [selectedItem, setSelectedItem] = useState("");
   const [current, setCurrent] = useState(0);
   useEffect(() => {
@@ -152,7 +151,6 @@ const ProjectList = () => {
                     <AutoComplete
                       className="w-56"
                       onSearch={(value) => {
-                        console.log(value);
                         dispatch(fetchSearchUser(value));
                       }}
                       options={

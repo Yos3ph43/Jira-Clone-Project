@@ -13,7 +13,6 @@ import { useState } from "react";
 
 const TaskComments = (props) => {
   const { taskId, comments } = props;
-  console.log(props);
   const task = useSelector((state) => state.project.taskDetail);
   const dispatch = useDispatch();
   const [commentContent, setCommentContent] = useState("");
@@ -32,7 +31,6 @@ const TaskComments = (props) => {
       <div>
         <Form
           onFinish={async (value) => {
-            console.log(value);
             await dispatch(addCommentAction(value));
             dispatch(fetchTaskDetail(taskId));
             setCommentContent("");
@@ -76,7 +74,6 @@ const TaskComments = (props) => {
                 <div id={`editform-${item.id}`} style={{ display: "none" }}>
                   <Form
                     onFinish={async (value) => {
-                      console.log(value);
                       await dispatch(editCommentAction(value));
                       dispatch(fetchTaskDetail(taskId));
                       closeEditComment(item);
@@ -115,7 +112,6 @@ const TaskComments = (props) => {
                 <span
                   className="cursor-pointer text-neutral-400 hover:text-neutral-800"
                   onClick={async () => {
-                    console.log("Delete");
                     await dispatch(deleteCommentAction(item.id));
                     dispatch(fetchTaskDetail(taskId));
                   }}

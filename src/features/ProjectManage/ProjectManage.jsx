@@ -36,7 +36,6 @@ const ProjectManage = () => {
     navigate("/auth/login");
   };
 
-  console.log(user);
   return (
     user && (
       <div>
