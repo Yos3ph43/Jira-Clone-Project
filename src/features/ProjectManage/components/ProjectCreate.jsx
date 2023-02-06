@@ -34,7 +34,11 @@ const ProjectCreate = () => {
           </Form.Item>
 
           {/* description */}
-          <Form.Item label="Description" name="description">
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[{ required: true, message: "Enter project description" }]}
+          >
             <ReactQuill theme="snow" />
           </Form.Item>
 
